@@ -17,3 +17,5 @@ usethis::use_news_md(open = FALSE)
 
 # create a vignette
 usethis::use_vignette("package_intro")
+
+pkgdown::build_site()
