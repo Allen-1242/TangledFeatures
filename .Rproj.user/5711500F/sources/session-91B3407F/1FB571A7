@@ -1,0 +1,26 @@
+{
+    "id": "1FB571A7",
+    "path": "~/GitHub/CorrelatedFeatures/R/Main.R",
+    "project_path": "R/Main.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": true,
+    "created": 1663531145669.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "18,59",
+        "scrollLine": "0"
+    },
+    "folds": "20|1|120|0|\n151|1|331|0|\n",
+    "lastKnownWriteTime": 1663531171,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1663531171,
+    "read_only": false,
+    "read_only_alternatives": []
+}

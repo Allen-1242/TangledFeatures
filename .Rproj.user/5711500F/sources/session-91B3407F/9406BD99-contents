@@ -1,0 +1,19 @@
+library(devtools)
+library(pkgdown)
+
+devtools::document()
+devtools::test()
+devtools::check()
+
+
+# created README.md for Github landing page
+usethis::use_readme_md(open = FALSE)
+
+# creates license file
+usethis::use_mit_license("Allen Daniel Sunny")
+
+# creates news file
+usethis::use_news_md(open = FALSE)
+
+# create a vignette
+usethis::use_vignette("package_intro")
