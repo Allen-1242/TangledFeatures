@@ -5,7 +5,7 @@
 [![CRAN status](https://www.r-pkg.org/badges/version/CorrelatedFeatures)](https://CRAN.R-project.org/package=CorrelatedFeatures)
 <!-- badges: end -->
 
-CorrelatedFeatures is a Random Forest based feature selection algorithm that excels in high dimensinoal data sets. The package uses the r/correlation package for all correlation calculations. 
+Correlated Forests is a Random Forest based algorithm that is used to extract features in spaces where there are many relationships between the variables
 
 ## Installation
 

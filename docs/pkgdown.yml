@@ -2,6 +2,11 @@ pandoc: '2.18'
 pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
+  CorrelatedForests: CorrelatedForests.html
+  Correlation: Correlation.html
   package_intro: package_intro.html
-last_built: 2022-09-18T20:29Z
+last_built: 2022-09-25T20:54Z
+urls:
+  reference: https://allen-1242.github.io/CorrelatedFeatures/reference
+  article: https://allen-1242.github.io/CorrelatedFeatures/articles
 
