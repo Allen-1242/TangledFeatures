@@ -147,6 +147,8 @@ GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kend
 # GeneralCor(df_tot_num, cor1 = 'Biweight midcorrelation', cor3 = 'tetrachloric')
 
 #RandomForest needs to determine if its a classification or a regression
+#Add a predict function
+
 
 CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 0.9, RF_coverage = 0.95, num_features = 5,  plot = FALSE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'biserialcorrekation', cor3 = 'cramersV')
 {
