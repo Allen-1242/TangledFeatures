@@ -12,11 +12,26 @@ library(dummy)
 
 #Loading the example dataset
 #df_tot <- read.csv("C:\\Users\\sunny\\Downloads\\housingPrices\\train.csv")
+class(df_tot)
+
+#Coerce to character
+df_tot <- as.data.table(df_tot)
+
+#Coerce to factor
+changeCols <- colnames(df_tot)[which(as.vector(df_tot[,lapply(.SD, class)]) == "character")]
+df_tot[,(changeCols):= lapply(.SD, as.factor), .SDcols = changeCols]
+
+#Coerce to numeric data type
+changeCols <- colnames(df_tot)[which(as.vector(df_tot[,lapply(.SD, class)]) == "integer")]
+df_tot[,(changeCols):= lapply(.SD, as.numeric), .SDcols = changeCols]
+
+
+#if a constant columm, set it to NA
+df_tot[ , lapply(.SD, function(v) if(uniqueN(v, na.rm = TRUE) > 1) v)]
 
 
 
 
-#To do , build and test this for a more generalize approach
 GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kendall')
 {
 
@@ -30,8 +45,25 @@ GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kend
 
     }
 
+    #If one factor and one numeric
+    if(class(df[[pos_1]])[1] %in% c("numeric") && class(df[[pos_1]])[1] %in% c("numeric"))
+    {
+      if(cor2 == 'PointBiserial') #binary
+      {
+        cor_value  <- correlation::cor_test(df, x = names(df)[pos_1], y = names(df)[pos_2] , method = 'PointBiserial')$r
+      }
+    }
+
+    if(class(df[[pos_1]])[1] %in% c("ordered") && class(df[[pos_1]])[1] %in% c("ordered"))
+    {
+      if(cor2 == 'PointBiserial') #binary
+      {
+        cor_value  <- correlation::cor_test(df, x = names(df)[pos_1], y = names(df)[pos_2] , method = 'PointBiserial')$r
+      }
+    }
+
     #If both are numeric
-    if(class(df[[pos_1]]) %in% c("integer", "numeric") && class(df[[pos_2]]) %in% c("integer", "numeric"))
+    if((class(df[[pos_1]])[1] %in% c("numeric") && class(df[[pos_1]])[1] %in% c("ordered")) || class(df[[pos_1]])[1] %in% c("ordered") && class(df[[pos_1]])[1] %in% c("numeric"))
     {
 
       if(cor1 == 'pearson')
@@ -56,53 +88,6 @@ GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kend
 
     }
 
-    #If one factor and one numeric
-    if(class(df[[pos_1]]) %in% c("character", "factor") && class(df[[pos_2]]) %in% c("integer", "numeric"))
-    {
-      if(cor2 == 'PointBiserial') #binary
-      {
-        cor_value  <- correlation::cor_test(df, x = names(df)[pos_1], y = names(df)[pos_2] , method = 'PointBiserial')$r
-      }
-    }
-
-    #If one numeric and one factor
-    if(class(df[[pos_1]]) %in% c("integer", "numeric") && class(df[[pos_2]]) %in% c("character", "factor"))
-    {
-      if(cor2 == 'PointBiserial')
-      {
-        cor_value  <- correlation::cor_test(df, x = names(df)[pos_1], y = names(df)[pos_2] , method = 'PointBiserial')$r
-      }
-    }
-
-    #If both are factors
-    if(class(df[[pos_1]]) %in% c("character", "factor") && class(df[[pos_2]]) %in% c("character", "factor"))
-    {
-      if(cor3 == 'spearman')
-      {
-        cor_value  <- correlation::cor_test(df, x = names(df)[pos_1], y = names(df)[pos_2] , method = 'spearman')$rho
-      }
-
-      if(cor3 == 'kendall')
-      {
-        cor_value  <- correlation::cor_test(df, x = names(df)[pos_1], y = names(df)[pos_2] , method = 'kendall')$tau
-      }
-
-      if(cor3 == 'ShepherdsPi')
-      {
-        cor_value  <- correlation::cor_test(df, x = names(df)[pos_1], y = names(df)[pos_2] , method = 'shepherd')$r
-      }
-
-      if(cor3 == 'Polychoric')
-      {
-        cor_value  <- correlation::cor_test(df, x = names(df)[pos_1], y = names(df)[pos_2] , method = 'polychoric')$r
-      }
-
-      if(cor3 == 'Tetrachoric')
-      {
-        cor_value  <- correlation::cor_test(df, x = names(df)[pos_1], y = names(df)[pos_2] , method = 'tetrachoric')$r
-      }
-    }
-
     return(cor_value)
   }
 
@@ -123,6 +108,8 @@ GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kend
 
 
 #Testing cor1 values
+
+# '1' '2' and 3'
 
 # sapply(df_tot, class)
 # c$OverallQual
