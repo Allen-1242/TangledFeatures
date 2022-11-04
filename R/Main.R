@@ -8,11 +8,12 @@ library(Matrix)
 
 library(correlation)
 library(data.table)
-library(dummy)
+library(fastDummies)
 
 #Loading the example dataset
 #df_tot <- read.csv("C:\\Users\\sunny\\Downloads\\housingPrices\\train.csv")
 class(df_tot)
+
 
 #Coerce to character
 df_tot <- as.data.table(df_tot)
@@ -27,34 +28,38 @@ df_tot[,(changeCols):= lapply(.SD, as.numeric), .SDcols = changeCols]
 
 
 #if a constant columm, set it to NA
-df_tot[ , lapply(.SD, function(v) if(uniqueN(v, na.rm = TRUE) > 1) v)]
+df_tot[sapply(df_tot, is.character)] <- lapply(df_tot[sapply(df_tot, is.character)], as.factor)
+df_tot[sapply(df_tot, is.integer)] <- lapply(df_tot[sapply(df_tot, is.integer)], as.numeric)
 
 
-
-
-GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kendall')
+GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kendall' , dummies = FALSE)
 {
+  cor_value <- NULL
 
-  cor_fun <- function(pos_1, pos_2, cor1, cor2,  cor3)
+  cor_fun <- function(pos_1, pos_2, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kendall')
   {
+
+
     #Same value , we return 1
-    if(all(df[[pos_1]] == df[[pos_2]]))
+    if(all(df[[pos_1]] == df[[pos_2]]) || pos_1 == pos_2)
     {
+      print(pos_1)
+      print(pos_2)
+
       cor_value = 1
       return(cor_value)
-
     }
 
     #If one factor and one numeric
-    if(class(df[[pos_1]])[1] %in% c("numeric") && class(df[[pos_1]])[1] %in% c("numeric"))
+    if(class(df[[pos_1]])[1] %in% c("numeric") && class(df[[pos_2]])[1] %in% c("numeric"))
     {
-      if(cor2 == 'PointBiserial') #binary
+      if(cor1 == 'pearson')
       {
-        cor_value  <- correlation::cor_test(df, x = names(df)[pos_1], y = names(df)[pos_2] , method = 'PointBiserial')$r
+        cor_value  <- correlation::cor_test(df, x = names(df)[pos_1], y = names(df)[pos_2], method = 'pearson')$r
       }
     }
 
-    if(class(df[[pos_1]])[1] %in% c("ordered") && class(df[[pos_1]])[1] %in% c("ordered"))
+    if(class(df[[pos_1]])[1] %in% c("ordered") && class(df[[pos_2]])[1] %in% c("ordered"))
     {
       if(cor2 == 'PointBiserial') #binary
       {
@@ -63,27 +68,12 @@ GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kend
     }
 
     #If both are numeric
-    if((class(df[[pos_1]])[1] %in% c("numeric") && class(df[[pos_1]])[1] %in% c("ordered")) || class(df[[pos_1]])[1] %in% c("ordered") && class(df[[pos_1]])[1] %in% c("numeric"))
+    if((class(df[[pos_1]])[1] %in% c("numeric") && class(df[[pos_2]])[1] %in% c("ordered")) || class(df[[pos_1]])[1] %in% c("ordered") && class(df[[pos_2]])[1] %in% c("numeric"))
     {
 
-      if(cor1 == 'pearson')
+      if(cor3 == 'kendall')
       {
-        cor_value  <- correlation::cor_test(df, x = names(df)[pos_1], y = names(df)[pos_2] , method = 'pearson')$r
-      }
-
-      if(cor1 == 'Biweight midcorrelation')
-      {
-        cor_value  <- correlation::cor_test(df, x = names(df)[pos_1], y = names(df)[pos_2] , method = 'Biweight')$r
-      }
-
-      if(cor1 == 'Distance')
-      {
-        cor_value  <- correlation::cor_test(df, x = names(df)[pos_1], y = names(df)[pos_2] , method = 'Distance')$r
-      }
-
-      if(cor1 == 'percentage')
-      {
-        cor_value  <- correlation::cor_test(df, x = names(df)[pos_1], y = names(df)[pos_2] , method = 'percentage')$r
+        cor_value  <- correlation::cor_test(df, x = names(df)[pos_1], y = names(df)[pos_2] , method = 'kendall')$r
       }
 
     }
@@ -93,11 +83,16 @@ GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kend
 
   cor_fun <- Vectorize(cor_fun)
 
+  #Dummy creation if the flag is set
+  if(dummies == TRUE)
+  {
+    df_tot <-  dummy_columns(df_tot)
+  }
+
   #Computing the matrix
-  corrmat <- outer(1:ncol(df)
-                   ,1:ncol(df)
-                   ,function(x, y) cor_fun(x, y, cor1,  cor2, cor3)
-  )
+  corrmat <- outer(1:2
+                   ,1
+                   ,function(x, y) cor_fun(pos_1 = x, pos_2 = y,  cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kendall'))
 
   rownames(corrmat) <- colnames(df)
   colnames(corrmat) <- colnames(df)
@@ -107,30 +102,13 @@ GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kend
 
 
 
-#Testing cor1 values
+corrmat <- outer(1:2
+                 ,1:1
+                 ,function(x, y) cor_fun(x, y, cor1,  cor2, cor3))
+)
 
-# '1' '2' and 3'
+GeneralCor(df = df_tot, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kendall' , dummies = FALSE)
 
-# sapply(df_tot, class)
-# c$OverallQual
-#
-# df_tot_numeric <- df_tot$
-#
-#
-# df_tot <- as.data.table(df_tot)
-#
-# columns <- c('MSSubClass', 'LotArea', 'OpenPorchSF', 'Alley')
-# df_tot_num <- df_tot[, ..columns]
-#
-# df_tot_num[is.na(Alley), Alley := "Grass"]
-#
-# df_tot_num <- as.data.table(cbind(dummy::dummy(df_tot_num), df_tot_num))
-# df_tot_num[,Alley:=NULL]
-#
-# #Note that we should two flags , cor_auto = FALSE (Automatically determines the correct correlation measure between two variables)
-# #Dummies = FALSE , indicating that automatic dummy creation will be done
-#
-#
 # GeneralCor(df_tot_num, cor1 = 'Biweight midcorrelation', cor3 = 'tetrachloric')
 
 #RandomForest needs to determine if its a classification or a regression
