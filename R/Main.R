@@ -15,36 +15,61 @@ library(fastDummies)
 class(df_tot)
 
 
-#Coerce to character
-df_tot <- as.data.table(df_tot)
 
-#Coerce to factor
-changeCols <- colnames(df_tot)[which(as.vector(df_tot[,lapply(.SD, class)]) == "character")]
-df_tot[,(changeCols):= lapply(.SD, as.factor), .SDcols = changeCols]
+#HAve a seperate data manipulation step
 
-#Coerce to numeric data type
-changeCols <- colnames(df_tot)[which(as.vector(df_tot[,lapply(.SD, class)]) == "integer")]
-df_tot[,(changeCols):= lapply(.SD, as.numeric), .SDcols = changeCols]
+DataCleaning = function(df)
+{
 
+
+
+  #Coerce to character
+  df_tot <- as.data.table(df_tot)
+
+  df_tot[is.na(df_tot), ] <- 0
+
+  # Replace all NAs by 0
+  #Coerce to factor
+  changeCols <- colnames(df_tot)[which(as.vector(df_tot[,lapply(.SD, class)]) == "character")]
+  df_tot[,(changeCols):= lapply(.SD, as.factor), .SDcols = changeCols]
+
+  #Coerce to numeric data type
+  changeCols <- colnames(df_tot)[which(as.vector(df_tot[,lapply(.SD, class)]) == "integer")]
+  df_tot[,(changeCols):= lapply(.SD, as.numeric), .SDcols = changeCols]
+
+  #Cleaning constant columns
+  #df_tot[sapply(df_tot, is.character)] <- lapply(df_tot[sapply(df_tot, is.character)], as.factor)
+  #df_tot[sapply(df_tot, is.integer)] <- lapply(df_tot[sapply(df_tot, is.integer)], as.numeric)
+
+  #numeric type creation of ordered factor columns
+  #df_tot = as.numeric(df_tot[['The orderedcolumns here']])
+
+  #Dummy creation uon columns that are unordered factors
+  df_tot = fastDummies::dummy_cols(df_tot)
+
+}
 
 #if a constant columm, set it to NA
-df_tot[sapply(df_tot, is.character)] <- lapply(df_tot[sapply(df_tot, is.character)], as.factor)
-df_tot[sapply(df_tot, is.integer)] <- lapply(df_tot[sapply(df_tot, is.integer)], as.numeric)
+#df_tot[sapply(df_tot, is.character)] <- lapply(df_tot[sapply(df_tot, is.character)], as.factor)
+#df_tot[sapply(df_tot, is.integer)] <- lapply(df_tot[sapply(df_tot, is.integer)], as.numeric)
+df[is.na(df)] <- 0
+replace(is.na(df), 0)
+
+library(dplyr)
+# Replace `NA` for all columns
+df <- df %>% mutate(across(everything(), ~ ifelse(is.na(.), 0, .)))
 
 
 GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kendall' , dummies = FALSE)
 {
   cor_value <- NULL
 
-  cor_fun <- function(pos_1, pos_2, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kendall')
+  cor_fun <- function(pos_1, pos_2, cor1 = 'pearson', cor2 = 'biserial', cor3 = 'kendall', cor4 = 'polychloric')
   {
 
-
     #Same value , we return 1
-    if(all(df[[pos_1]] == df[[pos_2]]) || pos_1 == pos_2)
+    if(identical(df[[pos_1]], df[[pos_2]]) || pos_1 == pos_2)
     {
-      print(pos_1)
-      print(pos_2)
 
       cor_value = 1
       return(cor_value)
@@ -59,15 +84,35 @@ GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kend
       }
     }
 
-    if(class(df[[pos_1]])[1] %in% c("ordered") && class(df[[pos_2]])[1] %in% c("ordered"))
+
+    #If both are factor check
+    if(class(df[[pos_1]])[1] %in% c("factor") && class(df[[pos_2]])[1] %in% c("factor"))
     {
-      if(cor2 == 'PointBiserial') #binary
+      if(cor2 == 'Polychloric') #binary
       {
-        cor_value  <- correlation::cor_test(df, x = names(df)[pos_1], y = names(df)[pos_2] , method = 'PointBiserial')$r
+        cor_value  <- correlation::cor_test(df, x = names(df)[pos_1], y = names(df)[pos_2] , method = 'Polychloric')$r
       }
     }
 
-    #If both are numeric
+    #If one is factor and another is numeric
+    if(class(df[[pos_1]])[1] %in% c("numeric") && class(df[[pos_2]])[1] %in% c("factor") || class(df[[pos_1]])[1] %in% c("factor") && class(df[[pos_2]])[1] %in% c("numeric"))
+    {
+      if(cor2 == 'polychoric') #binary
+      {
+        cor_value  <- correlation::cor_test(df, x = names(df)[pos_1], y = names(df)[pos_2] , method = 'polychoric')$r
+      }
+    }
+
+    #
+    if(class(df[[pos_1]])[1] %in% c("ordered") && class(df[[pos_2]])[1] %in% c("ordered"))
+    {
+      if(cor2 == 'polychoric') #binary
+      {
+        cor_value  <- correlation::cor_test(df, x = names(df)[pos_1], y = names(df)[pos_2] , method = 'polychoric')$r
+      }
+    }
+
+    # #If both are numeric
     if((class(df[[pos_1]])[1] %in% c("numeric") && class(df[[pos_2]])[1] %in% c("ordered")) || class(df[[pos_1]])[1] %in% c("ordered") && class(df[[pos_2]])[1] %in% c("numeric"))
     {
 
@@ -83,15 +128,9 @@ GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kend
 
   cor_fun <- Vectorize(cor_fun)
 
-  #Dummy creation if the flag is set
-  if(dummies == TRUE)
-  {
-    df_tot <-  dummy_columns(df_tot)
-  }
-
   #Computing the matrix
-  corrmat <- outer(1:2
-                   ,1
+  corrmat <- outer(1:ncol(df)
+                   ,1:ncol(df)
                    ,function(x, y) cor_fun(pos_1 = x, pos_2 = y,  cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kendall'))
 
   rownames(corrmat) <- colnames(df)
@@ -102,17 +141,6 @@ GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kend
 
 
 
-corrmat <- outer(1:2
-                 ,1:1
-                 ,function(x, y) cor_fun(x, y, cor1,  cor2, cor3))
-)
-
-GeneralCor(df = df_tot, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kendall' , dummies = FALSE)
-
-# GeneralCor(df_tot_num, cor1 = 'Biweight midcorrelation', cor3 = 'tetrachloric')
-
-#RandomForest needs to determine if its a classification or a regression
-#Add a predict function
 
 
 CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 0.9, RF_coverage = 0.95, num_features = 5,  plot = FALSE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'biserialcorrekation', cor3 = 'cramersV')
