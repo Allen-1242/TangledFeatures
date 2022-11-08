@@ -1,11 +1,11 @@
 
-# CorrelatedFeatures
+# TangledFeatures
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/CorrelatedFeatures)](https://CRAN.R-project.org/package=CorrelatedFeatures)
 <!-- badges: end -->
 
-CorrelatedFeatures is a Random Forest based feature selection algorithm that excels in high dimensinoal data sets. The package uses the r/correlation package for all correlation calculations. 
+TangledFeatures is a Random Forest based feature selection algorithm that excels in high dimensinoal data sets. The package uses the r/correlation package for all correlation calculations. 
 
 ## Installation
 
