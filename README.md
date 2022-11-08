@@ -1,5 +1,5 @@
 
-# CorrelatedFeatures
+# TangledFeatures
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/CorrelatedFeatures)](https://CRAN.R-project.org/package=CorrelatedFeatures)
