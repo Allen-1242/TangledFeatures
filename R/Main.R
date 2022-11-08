@@ -169,12 +169,13 @@ CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff
   ###Correlation matrix creation
   #Examine this further of course
   cor_matrix <- GeneralCor(Data[, -Y_var, with = FALSE])
+  cor_matrix[cor_matrix == 'NULL'] <- 0
 
   ut <- upper.tri(cor_matrix)
   pairs_mat <- data.frame(
     var1 = rownames(cor_matrix)[row(cor_matrix)[ut]],
-    var2 = rownames(cor_matrix)[col(cor_matrix)[ut]],
-    value  =(cor_matrix)[ut]
+    var2 = colnames(cor_matrix)[col(cor_matrix)[ut]],
+    value = unlist((cor_matrix)[ut])
   )
 
   #Sub-setting values only above threshold values
@@ -183,6 +184,7 @@ CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff
 
   ##Start of Random Forest iterations
 
+  list1 = list()
 
   if(dim(pairs_mat)[1] != 0)
   {
@@ -228,7 +230,9 @@ CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff
     }
 
     RF_list <- list()
-    Data_nocor <- Data[, dplyr::union(unlist(var_groups), unlist(Focus_variables)), with = FALSE] #Do I need a union in dplyr?
+
+    noncor_columns = colnames(Data)[! colnames(Data) %in% unlist(var_groups)]
+    Data_nocor <- Data[, ..noncor_columns]
 
     ##Start of the RF
     for(i in 1:nrow(result))
@@ -249,7 +253,12 @@ CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff
 
   #Fast Aggregation across multiple frames
   l <- lapply(RF_list, function(x) {x$Rowname <- row.names(x) ; x})
-  Res <- Reduce(function(...) merge(..., by = 'RowName', all = TRUE), l)
+  Res <- Reduce(function(...) merge(..., by = 'Rowname', all = TRUE), l)
+
+  Res <- as.data.table(Res)
+  setnafill(Res, 0)
+
+  setnafill(Res,  fill = 0)
 
   Rf_2 <- dcast(melt(setDT(Res), "RowName"),
                 RowName ~ sub("\\..*","",variable),

@@ -170,7 +170,7 @@ CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff
   #Examine this further of course
   cor_matrix <- GeneralCor(Data[, -Y_var, with = FALSE])
   cor_matrix[cor_matrix == 'NULL'] <- 0
-  
+
   ut <- upper.tri(cor_matrix)
   pairs_mat <- data.frame(
     var1 = rownames(cor_matrix)[row(cor_matrix)[ut]],
@@ -185,7 +185,7 @@ CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff
   ##Start of Random Forest iterations
 
   list1 = list()
-  
+
   if(dim(pairs_mat)[1] != 0)
   {
     for(j in 1:nrow(pairs_mat))
@@ -230,7 +230,7 @@ CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff
     }
 
     RF_list <- list()
-    
+
     noncor_columns = colnames(Data)[! colnames(Data) %in% unlist(var_groups)]
     Data_nocor <- Data[, ..noncor_columns]
 
@@ -254,10 +254,10 @@ CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff
   #Fast Aggregation across multiple frames
   l <- lapply(RF_list, function(x) {x$Rowname <- row.names(x) ; x})
   Res <- Reduce(function(...) merge(..., by = 'Rowname', all = TRUE), l)
-  
+
   Res <- as.data.table(Res)
   setnafill(Res, 0)
-  
+
   setnafill(Res,  fill = 0)
 
   Rf_2 <- dcast(melt(setDT(Res), "RowName"),
