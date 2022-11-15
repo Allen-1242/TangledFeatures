@@ -1,5 +1,5 @@
 #Loading libraries
-library(purrr) #Find an equivalent of this here
+library(purrr)#Find an equivalent of this here
 library(dplyr)#Find data table equivlents of this
 
 library(ranger)
@@ -10,9 +10,10 @@ library(correlation)
 library(data.table)
 library(fastDummies)
 
+
 #Loading the example dataset
 #df_tot <- read.csv("C:\\Users\\sunny\\Downloads\\housingPrices\\train.csv")
-class(df_tot)
+#class(df_tot)
 
 
 
@@ -20,13 +21,11 @@ class(df_tot)
 
 DataCleaning = function(df)
 {
-
-
-
   #Coerce to character
   df_tot <- as.data.table(df_tot)
 
-  df_tot[is.na(df_tot), ] <- 0
+  #Remove all spaces with underscore R
+  names(df_tot) <- make.names(names(df_tot), unique=TRUE)
 
   # Replace all NAs by 0
   #Coerce to factor
@@ -36,6 +35,8 @@ DataCleaning = function(df)
   #Coerce to numeric data type
   changeCols <- colnames(df_tot)[which(as.vector(df_tot[,lapply(.SD, class)]) == "integer")]
   df_tot[,(changeCols):= lapply(.SD, as.numeric), .SDcols = changeCols]
+
+
 
   #Cleaning constant columns
   #df_tot[sapply(df_tot, is.character)] <- lapply(df_tot[sapply(df_tot, is.character)], as.factor)
@@ -47,17 +48,18 @@ DataCleaning = function(df)
   #Dummy creation uon columns that are unordered factors
   df_tot = fastDummies::dummy_cols(df_tot)
 
+  df_tot[is.na(df_tot), ] <- 0
 }
 
 #if a constant columm, set it to NA
 #df_tot[sapply(df_tot, is.character)] <- lapply(df_tot[sapply(df_tot, is.character)], as.factor)
 #df_tot[sapply(df_tot, is.integer)] <- lapply(df_tot[sapply(df_tot, is.integer)], as.numeric)
-df[is.na(df)] <- 0
-replace(is.na(df), 0)
+#df_tot[is.na(df_tot)] <- 0
+#replace(is.na(df), 0)
 
-library(dplyr)
+#library(dplyr)
 # Replace `NA` for all columns
-df <- df %>% mutate(across(everything(), ~ ifelse(is.na(.), 0, .)))
+#df <- df %>% mutate(across(everything(), ~ ifelse(is.na(.), 0, .)))
 
 
 GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kendall' , dummies = FALSE)
@@ -140,10 +142,8 @@ GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kend
 }
 
 
-
-
-
-CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 0.9, RF_coverage = 0.95, num_features = 5,  plot = FALSE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'biserialcorrekation', cor3 = 'cramersV')
+Y_var = 'SalePrice'
+CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 0.6, RF_coverage = 0.95, num_features = 5,  plot = FALSE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'cramersV')
 {
   #ToDo
   #Perform all subletting and initalizations here
@@ -234,7 +234,7 @@ CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff
     noncor_columns = colnames(Data)[! colnames(Data) %in% unlist(var_groups)]
     Data_nocor <- Data[, ..noncor_columns]
 
-    ##Start of the RF
+    ##Start of the RF, note we need to add multiprocessing here
     for(i in 1:nrow(result))
     {
       Data_temp <- cbind(Data_nocor, Data[, unlist(result[i,]), with = FALSE])
@@ -242,6 +242,8 @@ CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff
       Rf <- ranger(as.formula(paste(paste(Y_var, '~'), paste(colnames(Data_temp), collapse = "+"))), data = Data_temp, mtry = ncol(Data_temp/3), importance = 'permutation')
       Rf_2 <- data.frame(Rf$variable.importance)
       RF_list[[i]] <- Rf_2
+
+      print(i)
     }
 
   }else
@@ -252,19 +254,15 @@ CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff
   }
 
   #Fast Aggregation across multiple frames
-  l <- lapply(RF_list, function(x) {x$Rowname <- row.names(x) ; x})
-  Res <- Reduce(function(...) merge(..., by = 'Rowname', all = TRUE), l)
-
-  Res <- as.data.table(Res)
-  setnafill(Res, 0)
-
-  setnafill(Res,  fill = 0)
+  l <- lapply(RF_list, function(x) {x$RowName <- row.names(x) ; x})
+  Res <- Reduce(function(...) merge(..., by = "RowName", all = TRUE), l)
 
   Rf_2 <- dcast(melt(setDT(Res), "RowName"),
-                RowName ~ sub("\\..*","",variable),
-                mean,
-                na.rm = TRUE,
-                value.var = "value")
+          RowName ~ sub("\\..*", "", variable),
+          mean,
+          na.rm = TRUE,
+          value.var = "value")
+
 
   #Taking the best variable from each group
   if(dim(pairs_mat)[1] != 0)
@@ -272,8 +270,8 @@ CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff
     for(bv in 1:nrow(var_groups))
     {
       comp <- var_groups[bv]
-      comp <- unlist(strsplit(comp[[1]]), '"')# Change is needed?
-      temp <- Rf_2[which(Rf_2$Rowname %in% comp)]
+      comp <- unlist(comp[[1]])
+      temp <- Rf_2[which(Rf_2$RowName %in% comp)]
       keep_var <- Rf_2$RowName[Rf_2$Rf == max(temp$Rf)]
       rem_var <- comp[which(comp != keep_var)]
 
@@ -282,23 +280,37 @@ CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff
     }
 
     #Fitting the RF without the correlated variables
-    temp_var <- c(Rf_2$RowName, 'Y_var')
-    Data_temp <- Data[,c(...temp_var)]
+    temp_var <- c(Rf_2$RowName, Y_var)
+    Data_temp <- Data[,c(..temp_var)]
 
     Rf_list = list()
 
-    Rf <- ranger(as.formula(paste(paste(Y_var, '~'), paste(colnames(Data_temp), collapse = "+"))), data = Data_temp, mtry = ncol(Data_temp/3), importance = 'permutation')
+    #Here let us add RFE in order to run it
+
+    Rf <- ranger(as.formula(paste(paste(Y_var, '~'), paste(colnames(Data_temp), collapse = "+"))), data = Data_temp, mtry = ncol(Data_temp)/3, importance = 'permutation')
     Rf_2 <- data.frame(Rf$variable.importance)
-    RF_list[[1]] <- Rf_2
 
-    l <- lapply(RF_list, function(x) {x$Rowname <- row.names(x) ; x})
-    Res <- Reduce(function(...) merge(..., by = 'RowName', all = TRUE), l)
 
-    Rf_2 <- dcast(melt(setDT(Res), "RowName"),
-                  RowName ~ sub("\\..*","",variable),
-                  mean,
-                  na.rm = TRUE,
-                  value.var = "value")
+    #RFE optimization method only final set of variables
+
+    # Run RFE
+    result_rfe2 <- rfe(x = x_train,
+                       y = y_train,
+                       sizes = c(1:17), # 17 features in total
+                       rfeControl = control)
+
+    # Print the results
+    result_rfe2
+
+    # Variable importance
+    varimp_data <- data.frame(feature = row.names(varImp(result_rfe2))[1:5],
+                              importance = varImp(result_rfe2)[1:5, 1])
+
+    ggplot(data = varimp_data,
+           aes(x = reorder(feature, -importance), y = importance, fill = feature)) +
+      geom_bar(stat="identity") + labs(x = "Features", y = "Variable Importance") +
+      geom_text(aes(label = round(importance, 2)), vjust=1.6, color="white", size=4) +
+      theme_bw() + theme(legend.position = "none")
   }
 
 
