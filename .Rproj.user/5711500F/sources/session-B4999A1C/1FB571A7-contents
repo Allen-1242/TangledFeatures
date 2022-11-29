@@ -1,6 +1,7 @@
 #Loading libraries
 library(purrr)#Find an equivalent of this here
 library(dplyr)#Find data table equivlents of this
+library(janitor)
 
 library(ranger)
 library(igraph)
@@ -19,7 +20,7 @@ library(fastDummies)
 
 #HAve a seperate data manipulation step
 
-DataCleaning = function(df)
+DataCleaning = function(df_tot)
 {
   #Coerce to character
   df_tot <- as.data.table(df_tot)
@@ -36,6 +37,8 @@ DataCleaning = function(df)
   changeCols <- colnames(df_tot)[which(as.vector(df_tot[,lapply(.SD, class)]) == "integer")]
   df_tot[,(changeCols):= lapply(.SD, as.numeric), .SDcols = changeCols]
 
+  #Clean column names
+  df_tot<- janitor::clean_names(df_tot)
 
 
   #Cleaning constant columns
@@ -49,6 +52,8 @@ DataCleaning = function(df)
   df_tot = fastDummies::dummy_cols(df_tot)
 
   df_tot[is.na(df_tot), ] <- 0
+
+  return(df_tot)
 }
 
 #if a constant columm, set it to NA
@@ -143,13 +148,15 @@ GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kend
 
 
 Y_var = 'SalePrice'
-CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 0.6, RF_coverage = 0.95, num_features = 5,  plot = FALSE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'cramersV')
+CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 0.9, RF_coverage = 0.95, num_features = 5,  plot = FALSE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'cramersV')
 {
   #ToDo
   #Perform all subletting and initalizations here
   #Creating clusters based upon graph theory
   list1 = list()
 
+  #Data Cleaning
+  Data <- DataCleaning(Data)
 
   #note to add all data checks that are needed in the system
 
@@ -180,6 +187,7 @@ CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff
 
   #Sub-setting values only above threshold values
   pairs_mat = pairs_mat[which(abs(pairs_mat$value) >= corr_cutoff & (pairs_mat$var1 != pairs_mat$var2)),]
+  rownames(pairs_mat) <- NULL
 
 
   ##Start of Random Forest iterations

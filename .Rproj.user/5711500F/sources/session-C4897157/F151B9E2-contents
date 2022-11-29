@@ -1,7 +1,0 @@
-x <- 1:8
-y<- 4
-
-# Multiplying array x elements with array y elements
-# Here multiply (*) parameter is not used still this 
-# function take it as default
-outer(x, y, "+")
