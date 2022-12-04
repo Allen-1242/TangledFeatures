@@ -1,6 +1,6 @@
 #Loading libraries
 library(purrr)#Find an equivalent of this here
-library(dplyr)#Find data table equivlents of this
+library(dplyr)#Find data table equivalents of this
 library(janitor)
 
 library(ranger)
@@ -14,31 +14,29 @@ library(fastDummies)
 
 #Loading the example dataset
 #df_tot <- read.csv("C:\\Users\\sunny\\Downloads\\housingPrices\\train.csv")
-#class(df_tot)
-
-
-
-#HAve a seperate data manipulation step
 
 DataCleaning = function(df_tot)
 {
   #Coerce to character
   df_tot <- as.data.table(df_tot)
+  df_tot[is.na(df_tot), ] <- 0
+
 
   #Remove all spaces with underscore R
   names(df_tot) <- make.names(names(df_tot), unique=TRUE)
+  df_tot<- janitor::clean_names(df_tot)
+
 
   # Replace all NAs by 0
   #Coerce to factor
-  changeCols <- colnames(df_tot)[which(as.vector(df_tot[,lapply(.SD, class)]) == "character")]
-  df_tot[,(changeCols):= lapply(.SD, as.factor), .SDcols = changeCols]
+  changeCols_char <- colnames(df_tot)[which(as.vector(df_tot[,lapply(.SD, class)]) == "character")]
+  df_tot[,(changeCols_char):= lapply(.SD, as.factor), .SDcols = changeCols_char]
 
   #Coerce to numeric data type
-  changeCols <- colnames(df_tot)[which(as.vector(df_tot[,lapply(.SD, class)]) == "integer")]
-  df_tot[,(changeCols):= lapply(.SD, as.numeric), .SDcols = changeCols]
+  changeCols_num <- colnames(df_tot)[which(as.vector(df_tot[,lapply(.SD, class)]) == "integer")]
+  df_tot[,(changeCols_num):= lapply(.SD, as.numeric), .SDcols = changeCols_num]
 
   #Clean column names
-  df_tot<- janitor::clean_names(df_tot)
 
 
   #Cleaning constant columns
@@ -50,22 +48,15 @@ DataCleaning = function(df_tot)
 
   #Dummy creation uon columns that are unordered factors
   df_tot = fastDummies::dummy_cols(df_tot)
+  df_tot<- janitor::clean_names(df_tot)
 
-  df_tot[is.na(df_tot), ] <- 0
+
+  #Dropping the previous columns
+  df_tot[, (changeCols_char) := NULL]
+
 
   return(df_tot)
 }
-
-#if a constant columm, set it to NA
-#df_tot[sapply(df_tot, is.character)] <- lapply(df_tot[sapply(df_tot, is.character)], as.factor)
-#df_tot[sapply(df_tot, is.integer)] <- lapply(df_tot[sapply(df_tot, is.integer)], as.numeric)
-#df_tot[is.na(df_tot)] <- 0
-#replace(is.na(df), 0)
-
-#library(dplyr)
-# Replace `NA` for all columns
-#df <- df %>% mutate(across(everything(), ~ ifelse(is.na(.), 0, .)))
-
 
 GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kendall' , dummies = FALSE)
 {
@@ -146,9 +137,8 @@ GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kend
   return(corrmat)
 }
 
-
-Y_var = 'SalePrice'
-CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 0.9, RF_coverage = 0.95, num_features = 5,  plot = FALSE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'cramersV')
+Y_var = 'sale_price'
+CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 0.7, RF_coverage = 0.95, num_features = 5,  plot = FALSE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'cramersV')
 {
   #ToDo
   #Perform all subletting and initalizations here
@@ -261,6 +251,7 @@ CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff
     RF_list[[i]] <- Rf_2
   }
 
+
   #Fast Aggregation across multiple frames
   l <- lapply(RF_list, function(x) {x$RowName <- row.names(x) ; x})
   Res <- Reduce(function(...) merge(..., by = "RowName", all = TRUE), l)
@@ -297,43 +288,29 @@ CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff
 
     Rf <- ranger(as.formula(paste(paste(Y_var, '~'), paste(colnames(Data_temp), collapse = "+"))), data = Data_temp, mtry = ncol(Data_temp)/3, importance = 'permutation')
     Rf_2 <- data.frame(Rf$variable.importance)
+    Rf_2$Var <- rownames(Rf_2)
 
 
-    #RFE optimization method only final set of variables
 
-    # Run RFE
-    result_rfe2 <- rfe(x = x_train,
-                       y = y_train,
-                       sizes = c(1:17), # 17 features in total
-                       rfeControl = control)
+    ##Simple 95%optimization
 
-    # Print the results
-    result_rfe2
 
-    # Variable importance
-    varimp_data <- data.frame(feature = row.names(varImp(result_rfe2))[1:5],
-                              importance = varImp(result_rfe2)[1:5, 1])
-
-    ggplot(data = varimp_data,
-           aes(x = reorder(feature, -importance), y = importance, fill = feature)) +
-      geom_bar(stat="identity") + labs(x = "Features", y = "Variable Importance") +
-      geom_text(aes(label = round(importance, 2)), vjust=1.6, color="white", size=4) +
-      theme_bw() + theme(legend.position = "none")
-  }
 
 
   # #Final RF based on RFE , based on num_features or coverage methods
   # if(#Method is based on coverage)
-  # {
-  #     Rf_2 <- na.omit(Rf_2)
-  #     Rf_2 <- Rf_2[which(Rf_2$Rf >= 0)]
-  #     Rf_2 <- Rf_2[order(-Rf)]
-  #
-  #     Rf_2 <- Rf_2$Rf/sum(Rf_2$Rf)
-  #     Rf_2 <- cumsum(Rf_2$Rf)
-  #     temp <- which(Rf_2$Rf > Rf_info_cutoff)[1]
-  #   }
-  #
+
+    Rf_2 <- na.omit(Rf_2)
+    Rf_2 <- Rf_2[which(Rf_2$Rf.variable.importance  >= 0),]
+    Rf_2 <- Rf_2[order(-Rf_2$Rf.variable.importance),]
+
+    Rf_2$Rf.variable.importance <- Rf_2$Rf.variable.importance/sum(Rf_2$Rf.variable.importance)
+    x1 <- cumsum(Rf_2$Rf.variable.importance)
+    temp <- which(x1 > RF_coverage)[1]
+
+    final_variables <- Rf_2[0:temp,]$Var
+
+
   # if(#method is based on num_columns)
   # {
   #   Rf_2 <- na.omit(Rf_2)
@@ -345,7 +322,7 @@ CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff
   #   temp <- which(Rf_2$Rf > Rf_info_cutoff)[1]
   # }
 
-
+  }
 
   ##Plotting function for correlation methods
   if(plot == TRUE)
@@ -353,17 +330,11 @@ CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff
     print('lo')
   }
 
+  return(final_variables)
+
 }
 
 
-#After the variables are built without the correlated features , should we do RFE to remove the variables ?
-#Let us do RFE , cumsum removal ,removing the lowest variable until we obtain the required coverage ?
-#Add gini and other things?
-#RFE based on the number of featurs or the coverage
 
 
 
-
-#Things to do
-#2. Finish and test the actual package , can it handle both classification and regression equations ?
-#1. Embedd that dataset
