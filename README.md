@@ -9,11 +9,11 @@ TangledFeatures is a Random Forest based feature selection algorithm that excels
 
 ## Installation
 
-You can install the development version of CorrelatedFeatures from [GitHub](https://github.com/) with:
+You can install the development version of TangledFeatures from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("Allen-1242/CorrelatedFeatures")
+devtools::install_github("Allen-1242/TangledFeatures")
 ```
 
 ## Example
@@ -21,7 +21,7 @@ devtools::install_github("Allen-1242/CorrelatedFeatures")
 This is a basic example which shows you how to solve a common problem:
 
 ``` r
-library(CorrelatedFeatures)
+library(TangledFeatures)
 ## basic example code
 ```
 
