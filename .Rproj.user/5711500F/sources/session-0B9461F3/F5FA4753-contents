@@ -1,0 +1,13 @@
+---
+title: "CorrelatedForests"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{package_intro}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+Based upon R ranger function , the algorithm groups variables into clusters and the best variable for each cluster is then taken. Final feature selection is based on RFE that attempts to provide explanation based upon the RF Gini index or the default mean decrease in accuracy. 
+
+it also has a method in order where certain variables will be forced and taken from the cluster they are in. This is used in order to gaurentee the feature in the final random forest feature selection. 
+
