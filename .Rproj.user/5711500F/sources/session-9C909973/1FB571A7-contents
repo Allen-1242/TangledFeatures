@@ -147,7 +147,7 @@ GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kend
 }
 
 
-Y_var = 'SalePrice'
+Y_var = 'sale_price'
 CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 0.9, RF_coverage = 0.95, num_features = 5,  plot = FALSE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'cramersV')
 {
   #ToDo
@@ -247,7 +247,7 @@ CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff
     {
       Data_temp <- cbind(Data_nocor, Data[, unlist(result[i,]), with = FALSE])
 
-      Rf <- ranger(as.formula(paste(paste(Y_var, '~'), paste(colnames(Data_temp), collapse = "+"))), data = Data_temp, mtry = ncol(Data_temp/3), importance = 'permutation')
+      Rf <- ranger(as.formula(paste(paste(Y_var, '~'), paste(colnames(Data_temp)[0:10], collapse = "+"))), data = Data_temp, mtry = ncol(Data_temp/3), importance = 'permutation')
       Rf_2 <- data.frame(Rf$variable.importance)
       RF_list[[i]] <- Rf_2
 
@@ -261,6 +261,10 @@ CorrelatedFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff
     RF_list[[i]] <- Rf_2
   }
 
+  
+  colnames(Data_temp)[1:30]
+  
+  
   #Fast Aggregation across multiple frames
   l <- lapply(RF_list, function(x) {x$RowName <- row.names(x) ; x})
   Res <- Reduce(function(...) merge(..., by = "RowName", all = TRUE), l)

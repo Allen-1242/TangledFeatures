@@ -3,7 +3,7 @@
     "path": "~/GitHub/CorrelatedFeatures/R/Main.R",
     "project_path": "R/Main.R",
     "type": "r_source",
-    "hash": "0",
+    "hash": "996407255",
     "contents": "",
     "dirty": false,
     "created": 1663531145669.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "212,29",
-        "scrollLine": "194"
+        "cursorPosition": "23,1",
+        "scrollLine": "25"
     },
-    "folds": "23|1|56|0|\n70|1|146|0|\n168|3|171|2|\n199|5|202|4|\n214|5|227|4|\n231|5|234|4|\n257|3|261|2|\n",
+    "folds": "70|1|146|0|\n168|3|171|2|\n199|5|202|4|\n214|5|227|4|\n231|5|234|4|\n257|3|261|2|\n282|5|291|4|\n",
     "lastKnownWriteTime": 1669660874,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1669660874361,
+    "last_content_update": 1670158387839,
     "read_only": false,
     "read_only_alternatives": []
 }
