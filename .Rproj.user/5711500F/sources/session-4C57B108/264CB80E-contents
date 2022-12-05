@@ -9,16 +9,6 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.2
-Imports:
-    purrr,
-    dplyr,
-    janitor,
-    ranger,
-    igraph,
-    Matrix,
-    correlation,
-    data.table,
-    fastDummies
 Suggests: 
     knitr,
     rmarkdown,
