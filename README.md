@@ -2,21 +2,26 @@
 # TangledFeatures
 
 <!-- badges: start -->
-[![CRAN status](https://www.r-pkg.org/badges/version/CorrelatedFeatures)](https://CRAN.R-project.org/package=CorrelatedFeatures)
+[![CRAN status](https://www.r-pkg.org/badges/version/TangledFeatures)](https://CRAN.R-project.org/package=TangledFeatures)
+[![BioC status](http://www.bioconductor.org/shields/build/release/bioc/TangledFeatures.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/TangledFeatures)
 <!-- badges: end -->
 
-TangledFeatures is a Random Forest based feature selection algorithm that excels in high dimensinoal data sets. The package uses the r/correlation package for all correlation calculations. 
+TangledFeatures provides a feature selection method that is meant to be fed into a linear or logistic regression. The algorithm handles the interrelationships between variables using a mix of correlation and graph theory methods. 
+
 
 ## Installation
 
-You can install the development version of TangledFeatures from [GitHub](https://github.com/) with:
+You can install the development version of TangledFeatures like so:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("Allen-1242/TangledFeatures")
+# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
 ```
 
-## Example
+## Usage
+
+TangledFeatures()
+
+## Documentation
 
 This is a basic example which shows you how to solve a common problem:
 
@@ -25,3 +30,4 @@ library(TangledFeatures)
 ## basic example code
 ```
 
+  

@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/reference/test_package.html#special-files
 
 library(testthat)
-library(CorrelatedFeatures)
+library(TangledFeatures)
 
-test_check("CorrelatedFeatures")
+test_check("TangledFeatures")
