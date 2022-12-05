@@ -1,39 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://allen-1242.github.io/CorrelatedFeatures/404.html</loc>
+    <loc>/404.html</loc>
   </url>
   <url>
-    <loc>https://allen-1242.github.io/CorrelatedFeatures/articles/CorrelatedForests.html</loc>
+    <loc>/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://allen-1242.github.io/CorrelatedFeatures/articles/Correlation.html</loc>
+    <loc>/articles/package_intro.html</loc>
   </url>
   <url>
-    <loc>https://allen-1242.github.io/CorrelatedFeatures/articles/index.html</loc>
+    <loc>/authors.html</loc>
   </url>
   <url>
-    <loc>https://allen-1242.github.io/CorrelatedFeatures/articles/package_intro.html</loc>
+    <loc>/index.html</loc>
   </url>
   <url>
-    <loc>https://allen-1242.github.io/CorrelatedFeatures/authors.html</loc>
+    <loc>/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>https://allen-1242.github.io/CorrelatedFeatures/index.html</loc>
+    <loc>/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://allen-1242.github.io/CorrelatedFeatures/LICENSE-text.html</loc>
+    <loc>/news/index.html</loc>
   </url>
   <url>
-    <loc>https://allen-1242.github.io/CorrelatedFeatures/LICENSE.html</loc>
+    <loc>/reference/hello.html</loc>
   </url>
   <url>
-    <loc>https://allen-1242.github.io/CorrelatedFeatures/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://allen-1242.github.io/CorrelatedFeatures/reference/hello.html</loc>
-  </url>
-  <url>
-    <loc>https://allen-1242.github.io/CorrelatedFeatures/reference/index.html</loc>
+    <loc>/reference/index.html</loc>
   </url>
 </urlset>
