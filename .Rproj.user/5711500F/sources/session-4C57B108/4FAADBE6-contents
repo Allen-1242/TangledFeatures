@@ -1,0 +1,3 @@
+usethis::image
+
+magick::image_read("man/figures/logo.png")
