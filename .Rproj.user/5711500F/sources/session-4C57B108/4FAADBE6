@@ -7,13 +7,13 @@
     "contents": "",
     "dirty": true,
     "created": 1670261835122.0,
-    "source_on_save": false,
+    "source_on_save": true,
     "relative_order": 2,
     "properties": {
         "tempName": "Untitled1",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "2,42",
+        "cursorPosition": "1,0",
         "scrollLine": "0"
     },
     "folds": "",
@@ -21,7 +21,7 @@
     "encoding": "",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1670264835941,
+    "last_content_update": 1670266198300,
     "read_only": false,
     "read_only_alternatives": []
 }

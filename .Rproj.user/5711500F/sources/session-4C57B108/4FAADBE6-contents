@@ -1,3 +1,4 @@
-usethis::image
+usethis::use_logo('C:\\Users\\sunny\\OneDrive\\Documents\\GitHub\\TangledFeatures\\man\\figures\\logo.png')
 
-magick::image_read("man/figures/logo.png")
+
+usethis::use_log
