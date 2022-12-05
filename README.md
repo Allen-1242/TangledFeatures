@@ -7,7 +7,6 @@
 [![CRAN status](https://www.r-pkg.org/badges/version/TangledFeatures)](https://CRAN.R-project.org/package=TangledFeatures)
 [![BioC status](http://www.bioconductor.org/shields/build/release/bioc/TangledFeatures.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/TangledFeatures)
 <!-- badges: end -->
-# TangledFeatures <img src="man/figures/logo.png" align="right" height="139" />
 
 TangledFeatures provides a feature selection method that is meant to be fed into a linear or logistic regression. The algorithm handles the interrelationships between variables using a mix of correlation and graph theory methods. 
 
