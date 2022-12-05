@@ -1,8 +1,6 @@
 
-# TangledFeatures
-# TangledFeatures <img src="man/figures/logo.png" align="right" height="139" />
-
-
+# TangledFeatures  <img src="man/figures/logo.png" align="right" height="139" />
+ 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/TangledFeatures)](https://CRAN.R-project.org/package=TangledFeatures)
 [![BioC status](http://www.bioconductor.org/shields/build/release/bioc/TangledFeatures.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/TangledFeatures)
