@@ -3,7 +3,6 @@
  
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/TangledFeatures)](https://CRAN.R-project.org/package=TangledFeatures)
-[![BioC status](http://www.bioconductor.org/shields/build/release/bioc/TangledFeatures.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/TangledFeatures)
 <!-- badges: end -->
 
 TangledFeatures provides a feature selection method that is meant to be fed into a linear or logistic regression. The algorithm handles the interrelationships between variables using a mix of correlation and graph theory methods. 
@@ -14,7 +13,8 @@ TangledFeatures provides a feature selection method that is meant to be fed into
 You can install the development version of TangledFeatures like so:
 
 ``` r
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+package(TangledFeatures)
+install_github("TangledFeatures/TangledFeatures")
 ```
 
 ## Usage
