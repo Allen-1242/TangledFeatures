@@ -9,4 +9,5 @@ gitcreds::gitcreds_set()
 
 gitcreds::gitcreds_set()
 
-devtools::install()
+devtools::install_github(build_vignettes=TRUE, repo = 'https://github.com/Allen-1242/TangledFeatures')
+
