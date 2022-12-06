@@ -25,10 +25,14 @@ library(Matrix)
 library(correlation)
 library(data.table)
 library(fastDummies)
+library(ggplot2)
 
 
 #Loading the example dataset
 #df_tot <- read.csv("C:\\Users\\sunny\\Downloads\\housingPrices\\train.csv")
+
+#Correlation Heat map
+#The correlation graph
 
 DataCleaning = function(df_tot)
 {
@@ -184,14 +188,14 @@ TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 
   cor_matrix[cor_matrix == 'NULL'] <- 0
 
   ut <- upper.tri(cor_matrix)
-  pairs_mat <- data.frame(
+  pairs_mat_total <- data.frame(
     var1 = rownames(cor_matrix)[row(cor_matrix)[ut]],
     var2 = colnames(cor_matrix)[col(cor_matrix)[ut]],
     value = unlist((cor_matrix)[ut])
   )
 
   #Sub-setting values only above threshold values
-  pairs_mat = pairs_mat[which(abs(pairs_mat$value) >= corr_cutoff & (pairs_mat$var1 != pairs_mat$var2)),]
+  pairs_mat = pairs_mat_total[which(abs(pairs_mat_total$value) >= corr_cutoff & (pairs_mat_total$var1 != pairs_mat_total$var2)),]
   rownames(pairs_mat) <- NULL
 
 
@@ -309,7 +313,7 @@ TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 
 
     ##Simple 95%optimization
 
-
+    #To ADD: RFE with cv based methods
 
 
     # #Final RF based on RFE , based on num_features or coverage methods
@@ -342,10 +346,29 @@ TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 
   ##Plotting function for correlation methods
   if(plot == TRUE)
   {
-    print('lo')
+    heatmap <- ggplot(data = pairs_mat, aes(x=var1, y=var2, fill=value)) +
+      geom_tile() +
+      geom_text(aes(var2, var1, label = value), size = 5) +
+      scale_fill_gradient2(low = "red", high = "green",
+                           limit = c(-1,1), name="Correlation") +
+      theme(axis.title.x = element_blank(),
+            axis.title.y = element_blank(),
+            panel.background = element_blank())
+
+    igraph_plot <- graph_from_adjacency_matrix(as(connects, "lsCMatrix"))
+
+  }else
+  {
+    heatmap <- c()
+    igraph_plot <- c()
   }
 
-  return(final_variables)
+
+  Results <- list('Final_Variables' = final_variables, 'Variable_groups' = var_groups,
+                  'Correlation_heatmap' = heatmap,'Graph_plot' = igraph_plot)
+
+
+  return(Results)
 
 }
 

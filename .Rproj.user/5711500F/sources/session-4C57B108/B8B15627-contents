@@ -1,0 +1,8 @@
+c <- TangledFeatures(Data = df_tot, Y_var = 'sale_price', plot = TRUE)
+
+c$Final_Variables
+c$Variable_groups
+
+c$Correlation_heatmap
+
+c$Correlation_heatmap

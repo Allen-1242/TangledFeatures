@@ -3,7 +3,7 @@
     "path": "~/GitHub/TangledFeatures/R/TangledFeatures.R",
     "project_path": "R/TangledFeatures.R",
     "type": "r_source",
-    "hash": "0",
+    "hash": "2893247168",
     "contents": "",
     "dirty": false,
     "created": 1670260112759.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "194,11",
-        "scrollLine": "191"
+        "cursorPosition": "133,0",
+        "scrollLine": "94"
     },
-    "folds": "33|1|73|0|\n76|1|152|0|\n204|5|207|4|\n219|5|232|4|\n221|7|231|6|\n236|5|239|4|\n240|5|242|4|\n251|5|259|4|\n262|3|266|2|\n282|3|339|2|\n284|5|293|4|\n",
-    "lastKnownWriteTime": 1670259678,
+    "folds": "37|1|77|0|\n80|1|156|0|\n84|3|143|2|\n88|5|92|4|\n98|7|100|6|\n106|5|111|4|\n115|5|120|4|\n124|5|129|4|\n133|5|140|4|\n160|1|372|0|\n177|3|180|2|\n206|3|265|2|\n208|5|211|4|\n223|5|236|4|\n240|5|243|4|\n244|5|246|4|\n266|3|270|2|\n286|3|343|2|\n288|5|297|4|\n347|3|359|2|\n360|3|363|2|\n",
+    "lastKnownWriteTime": 1670349917,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1670267977542,
+    "last_content_update": 1670351807809,
     "read_only": false,
     "read_only_alternatives": []
 }
