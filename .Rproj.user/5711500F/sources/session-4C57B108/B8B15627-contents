@@ -1,8 +1,10 @@
-c <- TangledFeatures(Data = df_tot, Y_var = 'sale_price', plot = TRUE)
+pkgdown::build_site()
+usethis::use_pkgdown_github_pages()
 
-c$Final_Variables
-c$Variable_groups
+usethis::gh_token_help()
 
-c$Correlation_heatmap
+usethis::create_github_token()
 
-c$Correlation_heatmap
+gitcreds::gitcreds_set()
+
+gitcreds::gitcreds_set()

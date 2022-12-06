@@ -34,6 +34,7 @@ library(ggplot2)
 #Correlation Heat map
 #The correlation graph
 
+#Generali Cleaning Function
 DataCleaning = function(df_tot)
 {
   #Coerce to character
@@ -77,7 +78,8 @@ DataCleaning = function(df_tot)
   return(df_tot)
 }
 
-GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kendall' , dummies = FALSE)
+#Generalized Correlation Function
+GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kendall')
 {
   cor_value <- NULL
 
@@ -156,12 +158,13 @@ GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kend
   return(corrmat)
 }
 
-#Y_var = 'sale_price'
+#Main Tangled Features Function
 TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 0.7, RF_coverage = 0.95, num_features = 5,  plot = FALSE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'cramersV')
 {
   #ToDo
   #Perform all subletting and initalizations here
   #Creating clusters based upon graph theory
+
   list1 = list()
 
   #Data Cleaning
