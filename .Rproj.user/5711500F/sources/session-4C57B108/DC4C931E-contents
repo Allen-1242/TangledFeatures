@@ -26,6 +26,7 @@ library(correlation)
 library(data.table)
 library(fastDummies)
 library(ggplot2)
+library(pandoc)
 
 
 #Loading the example dataset
