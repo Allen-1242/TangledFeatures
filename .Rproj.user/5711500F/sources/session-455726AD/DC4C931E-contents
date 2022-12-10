@@ -13,6 +13,8 @@
 #   Check Package:             'Ctrl + Shift + E'
 #   Test Package:              'Ctrl + Shift + T'
 
+library(roxygen2)
+
 #Loading libraries
 library(purrr)#Find an equivalent of this here
 library(dplyr)#Find data table equivalents of this
@@ -26,17 +28,27 @@ library(correlation)
 library(data.table)
 library(fastDummies)
 library(ggplot2)
-library(pandoc)
 
 
 #Loading the example dataset
 #df_tot <- read.csv("C:\\Users\\sunny\\Downloads\\housingPrices\\train.csv")
 
-#Correlation Heat map
-#The correlation graph
 
-#Generali Cleaning Function
-DataCleaning = function(df_tot)
+#' Compute a correlation matrix for the given dataset
+#'
+#'
+#' @param Data A data frame
+#'
+#' @examples
+#' if (requireNamespace("MASS", quietly = TRUE)) {
+#'   # Retrieve group classification from hierarchical cluster analysis
+#'   clustering <- cluster_analysis(iris[, 1:4], n = 3)
+#'
+#'   # Goodness of group classification
+#'   cluster_discrimination(clustering)
+#' }
+#'
+DataCleaning = function(Data)
 {
   #Coerce to character
   df_tot <- as.data.table(df_tot)

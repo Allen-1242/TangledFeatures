@@ -19,10 +19,13 @@ Imports:
     correlation,
     data.table,
     fastDummies, 
-    ggplot2
+    ggplot2,
+    pandoc,
+    R.rsp
 Suggests: 
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-VignetteBuilder: knitr
+VignetteBuilder: R.rsp, knitr, rmarkdown
+

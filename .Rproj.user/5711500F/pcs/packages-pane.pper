@@ -1,0 +1,7 @@
+{
+    "installOptions": {
+        "installFromRepository": true,
+        "libraryPath": "C:/Users/sunny/AppData/Local/R/cache/R/renv/library/TangledFeatures-e6c669c1/R-4.2/x86_64-w64-mingw32",
+        "installDependencies": true
+    }
+}

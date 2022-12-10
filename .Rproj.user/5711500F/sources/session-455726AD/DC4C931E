@@ -12,15 +12,16 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "82,85",
-        "scrollLine": "18"
+        "cursorPosition": "45,2",
+        "scrollLine": "30",
+        "ignored_words": "Generali\n"
     },
-    "folds": "39|1|79|0|\n83|1|159|0|\n163|1|376|0|\n181|3|184|2|\n212|5|215|4|\n227|5|240|4|\n244|5|247|4|\n248|5|250|4|\n270|3|274|2|\n290|3|347|2|\n351|3|363|2|\n364|3|367|2|\n",
-    "lastKnownWriteTime": 1670355125,
+    "folds": "51|1|91|0|\n95|1|171|0|\n175|1|388|0|\n",
+    "lastKnownWriteTime": 1670497072,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1670355125245,
+    "last_content_update": 1670497072609,
     "read_only": false,
     "read_only_alternatives": []
 }

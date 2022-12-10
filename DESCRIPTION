@@ -20,7 +20,8 @@ Imports:
     data.table,
     fastDummies, 
     ggplot2,
-    pandoc
+    pandoc,
+    R.rsp
 Suggests: 
     knitr,
     rmarkdown,
