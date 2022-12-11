@@ -4,7 +4,7 @@ Title: Feature Selection in highly correlated space
 Version: 0.1.0
 Author: Allen Daniel Sunny
 Maintainer: <allensunny1242@gmail.com>
-Description: This package picks out the best features in a highly correlated and high dimensional space.
+Description: This package picks out the best features in a highly correlated and high dimensional space
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -20,11 +20,11 @@ Imports:
     data.table,
     fastDummies, 
     ggplot2,
-    methods
+    pandoc,
+    R.rsp
 Suggests: 
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0),
-    R.rsp
+    testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: R.rsp, knitr, rmarkdown

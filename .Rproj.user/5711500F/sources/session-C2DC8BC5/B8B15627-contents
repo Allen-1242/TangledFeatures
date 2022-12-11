@@ -18,3 +18,10 @@ readRDS("build/vignette.rds")
 devtools::document()
 
 renv::record("renv@0.16.0")
+
+
+devtools::uses_testthat()
+
+usethis::use_test("DataCleaning")
+
+usethis::use_pkgdown()

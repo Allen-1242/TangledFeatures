@@ -20,11 +20,10 @@ Imports:
     data.table,
     fastDummies, 
     ggplot2,
-    methods
+    rlang
 Suggests: 
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0),
-    R.rsp
+    testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: R.rsp, knitr, rmarkdown

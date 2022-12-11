@@ -7,11 +7,15 @@
 DataCleaning(Data)
 }
 \arguments{
-\item{Data}{The imported Data Frame}
+\item{Data}{The imported dataframe}
 }
 \value{
-The cleaned data. Please note that the data has been cleaned including column names, NA values and coerced to data table
+The cleaned data. Please note that the data has been cleaned inluding column names, NA values and coreced to data table
 }
 \description{
 Automatic Data Cleaning
+}
+\examples{
+ # Cleaning a standard dataframe
+ DataCleaning(Data)
 }
