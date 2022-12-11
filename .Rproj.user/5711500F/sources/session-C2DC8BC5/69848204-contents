@@ -1,0 +1,50 @@
+---
+title: "Correlation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Correlation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(TangledFeatures)
+```
+
+# Introduction
+
+We attempt to link similar features on the basis of correlation. TangledFeatures automatically detects the type of correlation needed between two features. We currently generate the correlations between numeric, factor(categorical) and ordered factor types. You can set the correlation type based upon the data set you have within the package. 
+
+You can also generate the correlation heat map for the entire data set as well as the interconnected network graph 
+
+
+# Correlation types 
+*Numeric - Numeric Correlation: Set by the cor1 metric. Currently it defaults to Pearson correlation
+*Numeric - Factor(Unordered): Set by the cor2 metric. Currently it defaults to Pearson correlation
+*Numeric -  Factor(Ordered): Set by the cor3 metric. Currently it defaults to Pearson correlation
+*Factor(Unordered) - Factor(Ordered) Set by the cor3 metric. Currently it defaults to Pearson correlation
+*Factor(Unordered) - Factor(Unordered) Set by the cor3 metric. Currently it defaults to Pearson correlation
+*Factor(Ordered) - Factor(Ordered) Set by the cor3 metric. Currently it defaults to Pearson correlation
+
+# Correlation Visualization
+Set plot = TRUE in the inital function
+
+We can generate the heat map from the final TangledFeatures object  
+
+```{r setup}
+plot_obj <- TangledFeatures(Data)$Correlation_heatmap
+plot(plot_obj)
+```
+We can generate the interconnected graph as well
+
+```{r setup}
+plot_obj <- TangledFeatures(Data)$Graph_plot
+plot(plot_obj)
+```

@@ -25,3 +25,5 @@ devtools::uses_testthat()
 usethis::use_test("DataCleaning")
 
 usethis::use_pkgdown()
+usethis::use_lifecycle_badge("experimental")
+usethis::use_vignette("Correlation")
