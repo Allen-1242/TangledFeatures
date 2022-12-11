@@ -4,5 +4,8 @@ pkgdown_sha: ~
 articles:
   Correlation: Correlation.html
   package_intro: package_intro.html
-last_built: 2022-12-11T18:07Z
+last_built: 2022-12-11T19:10Z
+urls:
+  reference: https://allen-1242.github.io/TangledFeatures/reference
+  article: https://allen-1242.github.io/TangledFeatures/articles
 
