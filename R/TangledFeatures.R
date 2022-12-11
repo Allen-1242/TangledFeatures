@@ -9,7 +9,7 @@
 #
 # Some useful keyboard shortcuts for package authoring:
 #
-#   Install Package:           'Ctrl + Shift + B'
+#   Install Package:           'Ctrl + Shift ++ B'
 #   Check Package:             'Ctrl + Shift + E'
 #   Test Package:              'Ctrl + Shift + T'
 
@@ -32,6 +32,15 @@ library(ggplot2)
 
 #Loading the example dataset
 #df_tot <- read.csv("C:\\Users\\sunny\\Downloads\\housingPrices\\train.csv")
+
+
+#' Tree Distances
+#'
+#' These datasets contain the distances between sets
+#' of 10-tip, 11-tip and 12-tip trees.
+#' @name Housing_Prices_dataset
+#' @keywords datasets
+
 
 
 #' Automatic Data Cleaning

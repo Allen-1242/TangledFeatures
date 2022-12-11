@@ -29,3 +29,5 @@ Suggests:
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://allen-1242.github.io/TangledFeatures/
+Depends: 
+    R (>= 2.10)
