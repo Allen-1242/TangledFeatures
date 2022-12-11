@@ -29,3 +29,7 @@ usethis::use_vignette("Correlation")
 #Updating the website
 usethis::gh_token_help()
 usethis::use_pkgdown_github_pages()
+credentials::set_github_pat("227G!t^8aEi")
+
+usethis::use_github_pages(branch = "TangledFeatures", path = "/", cname = NA)
+
