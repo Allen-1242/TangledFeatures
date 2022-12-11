@@ -4,6 +4,9 @@
     <loc>/404.html</loc>
   </url>
   <url>
+    <loc>/articles/Correlation.html</loc>
+  </url>
+  <url>
     <loc>/articles/index.html</loc>
   </url>
   <url>
@@ -25,9 +28,18 @@
     <loc>/news/index.html</loc>
   </url>
   <url>
+    <loc>/reference/DataCleaning.html</loc>
+  </url>
+  <url>
+    <loc>/reference/GeneralCor.html</loc>
+  </url>
+  <url>
     <loc>/reference/hello.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/TangledFeatures.html</loc>
   </url>
 </urlset>
