@@ -18,7 +18,7 @@ Imports:
     Matrix,
     correlation,
     data.table,
-    fastDummies, 
+    fastDummies,
     ggplot2,
     methods
 Suggests: 
