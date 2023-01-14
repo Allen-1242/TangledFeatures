@@ -20,21 +20,21 @@ library(TangledFeatures)
 
 # Introduction
 
-We attempt to link similar features on the basis of correlation. TangledFeatures automatically detects the type of correlation needed between two features. We currently generate the correlations between numeric, factor(categorical) and ordered factor types. You can set the correlation type based upon the data set you have within the package. 
+We attempt to link similar features on the basis of correlation. TangledFeatures automatically detects the type of correlation needed between two features. We currently generate the correlations between numeric, unordered categorical variables and ordered categorical variables You can set the correlation type based upon the data set you have within the package. 
 
 You can also generate the correlation heat map for the entire data set as well as the interconnected network graph 
 
 
 # Correlation types 
-*Numeric - Numeric Correlation: Set by the cor1 metric. Currently it defaults to Pearson correlation
-*Numeric - Factor(Unordered): Set by the cor2 metric. Currently it defaults to Pearson correlation
-*Numeric -  Factor(Ordered): Set by the cor3 metric. Currently it defaults to Pearson correlation
-*Factor(Unordered) - Factor(Ordered) Set by the cor3 metric. Currently it defaults to Pearson correlation
-*Factor(Unordered) - Factor(Unordered) Set by the cor3 metric. Currently it defaults to Pearson correlation
-*Factor(Ordered) - Factor(Ordered) Set by the cor3 metric. Currently it defaults to Pearson correlation
+*   Numeric-to-Numeric Correlation: Set by the cor1 metric. Currently it defaults to Pearson correlation
+*   Numeric-to-Factor(Unordered): Set by the cor2 metric. Currently it defaults to PointBiserial correlation
+*   Numeric-to-Factor(Ordered): Set by the cor3 metric. Currently it defaults to Kendall correlation
+*   Factor(Unordered)-to-Factor(Ordered) Set by the cor3 metric. Currently it defaults to a chi Squared test 
+*   Factor(Unordered)-to-Factor(Unordered) Set by the cor3 metric. Currently it defaults to Cramer's V  
+*   Factor(Ordered)-to-Factor(Ordered) Set by the cor3 metric. Currently it defaults to Polychoric  correlation
 
 # Correlation Visualization
-Set plot = TRUE in the inital function
+Set plot = TRUE in the initial function
 
 We can generate the heat map from the final TangledFeatures object  
 

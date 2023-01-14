@@ -1,19 +1,3 @@
-# Hello, world!
-#
-# This is an example function named 'hello'
-# which prints 'Hello, world!'.
-#
-# You can learn more about package authoring with RStudio at:
-#
-#   http://r-pkgs.had.co.nz/
-#
-# Some useful keyboard shortcuts for package authoring:
-#
-#   Install Package:           'Ctrl + Shift ++ B'
-#   Check Package:             'Ctrl + Shift + E'
-#   Test Package:              'Ctrl + Shift + T'
-
-
 #Loading libraries
 library(purrr)#Find an equivalent of this here
 library(dplyr)#Find data table equivalents of this
@@ -75,7 +59,6 @@ DataCleaning = function(Data)
   changeCols_num <- colnames(Data)[which(as.vector(Data[,lapply(.SD, class)]) == "integer")]
   Data[,(changeCols_num):= lapply(.SD, as.numeric), .SDcols = changeCols_num]
 
-  #Clean column names
 
 
   #Cleaning constant columns
@@ -85,7 +68,7 @@ DataCleaning = function(Data)
   #numeric type creation of ordered factor columns
   #df_tot = as.numeric(df_tot[['The orderedcolumns here']])
 
-  #Dummy creation uon columns that are unordered factors
+  #Dummy creation of columns that are unordered factors
   Data = fastDummies::dummy_cols(Data)
   Data<- janitor::clean_names(Data)
 
