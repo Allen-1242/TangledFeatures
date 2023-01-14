@@ -49,7 +49,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/Correlation.html">Correlation</a>
-    <a class="dropdown-item" href="../articles/package_intro.html">package_intro</a>
+    <a class="dropdown-item" href="../articles/package_intro.html">Data Cleaning</a>
   </div>
 </li>
 <li class="nav-item">
@@ -89,30 +89,35 @@
 <p>We attempt to link similar features on the basis of correlation.
 TangledFeatures automatically detects the type of correlation needed
 between two features. We currently generate the correlations between
-numeric, factor(categorical) and ordered factor types. You can set the
-correlation type based upon the data set you have within the
-package.</p>
+numeric, unordered categorical variables and ordered categorical
+variables You can set the correlation type based upon the data set you
+have within the package.</p>
 <p>You can also generate the correlation heat map for the entire data
 set as well as the interconnected network graph</p>
 </div>
 <div class="section level2">
 <h2 id="correlation-types">Correlation types<a class="anchor" aria-label="anchor" href="#correlation-types"></a>
 </h2>
-<p><em>Numeric - Numeric Correlation: Set by the cor1 metric. Currently
-it defaults to Pearson correlation </em>Numeric - Factor(Unordered): Set
-by the cor2 metric. Currently it defaults to Pearson correlation
-<em>Numeric - Factor(Ordered): Set by the cor3 metric. Currently it
-defaults to Pearson correlation </em>Factor(Unordered) - Factor(Ordered)
-Set by the cor3 metric. Currently it defaults to Pearson correlation
-<em>Factor(Unordered) - Factor(Unordered) Set by the cor3 metric.
-Currently it defaults to Pearson correlation </em>Factor(Ordered) -
-Factor(Ordered) Set by the cor3 metric. Currently it defaults to Pearson
-correlation</p>
+<ul>
+<li>Numeric-to-Numeric Correlation: Set by the cor1 metric. Currently it
+defaults to Pearson correlation</li>
+<li>Numeric-to-Factor(Unordered): Set by the cor2 metric. Currently it
+defaults to PointBiserial correlation</li>
+<li>Numeric-to-Factor(Ordered): Set by the cor3 metric. Currently it
+defaults to Kendall correlation</li>
+<li>Factor(Unordered)-to-Factor(Ordered) Set by the cor3 metric.
+Currently it defaults to a chi Squared test</li>
+<li>Factor(Unordered)-to-Factor(Unordered) Set by the cor3 metric.
+Currently it defaults to Cramer’s V<br>
+</li>
+<li>Factor(Ordered)-to-Factor(Ordered) Set by the cor3 metric. Currently
+it defaults to Polychoric correlation</li>
+</ul>
 </div>
 <div class="section level2">
 <h2 id="correlation-visualization">Correlation Visualization<a class="anchor" aria-label="anchor" href="#correlation-visualization"></a>
 </h2>
-<p>Set plot = TRUE in the inital function</p>
+<p>Set plot = TRUE in the initial function</p>
 <p>We can generate the heat map from the final TangledFeatures
 object</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
