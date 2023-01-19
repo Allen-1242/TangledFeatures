@@ -7,6 +7,8 @@
 
 TangledFeatures provides a feature selection method that is meant to be fed into a linear or logistic regression. The algorithm handles the interrelationships between variables using a mix of correlation and graph theory methods. 
 
+Please note that the package is currently submitted to CRAN and awaiting approval. CRAN submissions unfortunately take a long time.
+
 
 ## Installation
 
