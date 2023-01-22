@@ -42,16 +42,30 @@ DataCleaning = function(Data)
 
   if(!is.data.frame(Data)) stop("Value needs to be a data frame or data table")
 
-  #Coerce to character
+  #Coerce to data table drop NA
   Data <- data.table::as.data.table(Data)
   Data[is.na(Data), ] <- 0
 
-
-  #Remove all spaces with underscore R
+  #Remove unclean names
   names(Data) <- make.names(names(Data), unique=TRUE)
-  Data<- janitor::clean_names(Data)
+  Data <- janitor::clean_names(Data)
 
-  #Coerce to factor
+  #Identification of unordered factors
+
+  #If its an order factor non numeric, we need replacement not one hot encoding
+
+
+  #Dummy creation of columns that are unordered factors
+  Data = fastDummies::dummy_cols(Data)
+  Data <- janitor::clean_names(Data)
+
+  #Make all characters factors
+
+
+  #Dropping the previous columns
+  Data[, (changeCols_char) := NULL]
+
+  #Coerce to character
   changeCols_char <- colnames(Data)[which(as.vector(Data[,lapply(.SD, class)]) == "character")]
   Data[,(changeCols_char):= lapply(.SD, as.factor), .SDcols = changeCols_char]
 
@@ -67,14 +81,6 @@ DataCleaning = function(Data)
 
   #numeric type creation of ordered factor columns
   #df_tot = as.numeric(df_tot[['The orderedcolumns here']])
-
-  #Dummy creation of columns that are unordered factors
-  Data = fastDummies::dummy_cols(Data)
-  Data<- janitor::clean_names(Data)
-
-
-  #Dropping the previous columns
-  Data[, (changeCols_char) := NULL]
 
 
   return(Data)
