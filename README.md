@@ -7,6 +7,7 @@
 
 TangledFeatures is a feature selection method that extracts needed variables in highly interrelated spaces. It does not alter the nature of the variables and is hence an alternative to traditional dimensionality reduction techniques. 
 
+Features extracted are meant to be inputted into easily explainable models such as linear/logistic regressions or shallow decision trees. TangledFeatures attempts to provide highly accurate and interpretable models as opposed to current black box solutions.
 
 ## Installation
 
