@@ -3,9 +3,5 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   Correlation: Correlation.html
-  package_intro: package_intro.html
-last_built: 2023-01-14T07:04Z
-urls:
-  reference: https://allen-1242.github.io/TangledFeatures/reference
-  article: https://allen-1242.github.io/TangledFeatures/articles
+last_built: 2023-01-22T07:19Z
 
