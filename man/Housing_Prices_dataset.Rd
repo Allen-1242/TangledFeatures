@@ -3,9 +3,9 @@
 \name{Housing_Prices_dataset}
 \alias{Housing_Prices_dataset}
 \alias{DataCleaning}
-\title{Tree Distances}
+\title{Housing prices dataset}
 \usage{
-DataCleaning(Data)
+DataCleaning(Data, Y_var)
 }
 \arguments{
 \item{Data}{The imported Data Frame}
@@ -14,8 +14,7 @@ DataCleaning(Data)
 The cleaned data. Please note that the data has been cleaned including column names, NA values and coerced to data table
 }
 \description{
-These datasets contain the distances between sets
-of 10-tip, 11-tip and 12-tip trees.
+Housing prices dataset
 }
 \keyword{Automatic}
 \keyword{Cleaning}

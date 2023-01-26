@@ -4,7 +4,7 @@
 \alias{GeneralCor}
 \title{Generalized Correlation function}
 \usage{
-GeneralCor(df, cor1 = "pearson", cor2 = "PointBiserial", cor3 = "kendall")
+GeneralCor(df, cor1 = "pearson", cor2 = "polychoric", cor3 = "spearman")
 }
 \arguments{
 \item{df}{The imported Data Frame}

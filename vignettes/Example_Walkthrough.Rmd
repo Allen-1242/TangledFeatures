@@ -1,0 +1,63 @@
+---
+title: "Boston Housing Prices Example"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Example_Walkthrough}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+# Introduction
+In this walkthrough, we will go through the various use cases of TangledFeatures and how it outperforms traditional feature selection methods. We will also compare the raw accuracy of the package to other methods including standard black box approaches. 
+
+TangledFeatures relies on the dataset inputted to be correct. If there are categorical features please ensure that it is inputted as a factor. If done correctly, the package will identify the correct correlation based relationships between the variables. 
+
+In this example, we will be using the Boston housing prices data set. There has been some cleaning beforehand so that all the variables are in the correct orientation. 
+
+# Getting Started 
+TangledFeatures primarily relies on ggplot2 for visualization, data.table for data manipulation, correlation for various correlation methods and ranger for its Random Forest implementation. There are a few other packages used to run certain features. 
+
+```{r libraries}
+library(ranger)
+library(igraph)
+library(correlation)
+library(data.table)
+library(fastDummies)
+library(ggplot2)
+library(psych)
+```
+
+# Loading the Data
+To read the data we can use the simple: 
+
+```{r Data Loading}
+data <- TangledFeatures::Housing_Prices_dataset
+```
+
+This loads the base Boston housing prices data set. You can load this into the TangledFeatures function by:
+
+# Correlation and treating the data
+We are able to identify the variable class for each variable and assign it's appropriate correlation relationship with other variables. Read more in the Correlation section.
+
+If data_clean is set to 'TRUE' we follow a set of steps to clean the data including cleaning column names, dummy column creation and removal of NAs. Please read more in the 'Data_input' section.
+
+Let's set the function and call it's various outputs 
+```{r Function call}
+Results <- TangledFeatures(Data = TangledFeatures::Housing_Prices_dataset, Y_var = 'Sales_Price', Focus_variables = list(), corr_cutoff = 0.7, RF_coverage = 0.95, num_features = 5,  plot = TRUE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'cramersV')
+```
+
+```{r Correlation Heatmap}
+Heatmap_plot <- Results$Correlation_heatmap
+```
+
+```{r Correlation Graph}
+Heatmap_plot <- Results$Variable_groups
+```

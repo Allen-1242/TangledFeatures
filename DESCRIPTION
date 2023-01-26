@@ -20,7 +20,8 @@ Imports:
     data.table,
     fastDummies,
     ggplot2,
-    methods
+    methods,
+    psych
 Suggests: 
     knitr,
     rmarkdown,

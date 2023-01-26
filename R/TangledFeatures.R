@@ -12,16 +12,12 @@ library(correlation)
 library(data.table)
 library(fastDummies)
 library(ggplot2)
+library(psych)
 
 
 #Loading the example dataset
-#df_tot <- read.csv("C:\\Users\\sunny\\Downloads\\housingPrices\\train.csv")
 
-
-#' Tree Distances
-#'
-#' These datasets contain the distances between sets
-#' of 10-tip, 11-tip and 12-tip trees.
+#' Housing prices dataset
 #' @name Housing_Prices_dataset
 #' @keywords datasets
 
@@ -37,8 +33,15 @@ library(ggplot2)
 #' @export
 #'
 
-DataCleaning = function(Data)
+
+DataCleaning = function(Data, Y_var)
 {
+  #Ordinal Encoding function
+  encode_ordinal <- function(x, order = unique(x)) {
+    x <- as.numeric(factor(x, levels = order, exclude = NULL))
+    x
+  }
+
 
   if(!is.data.frame(Data)) stop("Value needs to be a data frame or data table")
 
@@ -46,44 +49,46 @@ DataCleaning = function(Data)
   Data <- data.table::as.data.table(Data)
   Data[is.na(Data), ] <- 0
 
+  #Storing column position for the dependent variable to see if it has changed
+  Y_var_pos <- which(colnames(Data) == Y_var)
+
   #Remove unclean names
   names(Data) <- make.names(names(Data), unique=TRUE)
   Data <- janitor::clean_names(Data)
 
-  #Identification of unordered factors
+  #Storing the new column dependent value
+  New_Yvar <- colnames(Data)[Y_var_pos]
 
-  #If its an order factor non numeric, we need replacement not one hot encoding
 
+  #Make all characters factors
+  changeCols_char <- colnames(Data)[which(as.vector(Data[,lapply(.SD, class)]) == "character")]
+  Data[,(changeCols_char):= lapply(.SD, as.factor), .SDcols = changeCols_char]
+
+  #If there is a order to it, use ordinal encoding, note please change this to a faster method
+  for(i in 1:ncol(Data))
+  {
+    if(is.ordered(Data[, ..i]))
+    {
+      Data[, ..i] <- encode_ordinal(Data[, ..i])
+    }
+  }
 
   #Dummy creation of columns that are unordered factors
   Data = fastDummies::dummy_cols(Data)
   Data <- janitor::clean_names(Data)
 
-  #Make all characters factors
-
-
-  #Dropping the previous columns
-  Data[, (changeCols_char) := NULL]
-
-  #Coerce to character
-  changeCols_char <- colnames(Data)[which(as.vector(Data[,lapply(.SD, class)]) == "character")]
-  Data[,(changeCols_char):= lapply(.SD, as.factor), .SDcols = changeCols_char]
-
   #Coerce to numeric data type
   changeCols_num <- colnames(Data)[which(as.vector(Data[,lapply(.SD, class)]) == "integer")]
   Data[,(changeCols_num):= lapply(.SD, as.numeric), .SDcols = changeCols_num]
 
-
-
-  #Cleaning constant columns
-  #df_tot[sapply(df_tot, is.character)] <- lapply(df_tot[sapply(df_tot, is.character)], as.factor)
-  #df_tot[sapply(df_tot, is.integer)] <- lapply(df_tot[sapply(df_tot, is.integer)], as.numeric)
+  #Dropping the previous columns
+  Data[, (changeCols_char) := NULL]
 
   #numeric type creation of ordered factor columns
-  #df_tot = as.numeric(df_tot[['The orderedcolumns here']])
 
+  Data_Results <- list('Cleaned_Data' = Data, 'New_Dependent' = New_Yvar)
 
-  return(Data)
+  return(Data_Results)
 }
 
 #Generalized Correlation Function
@@ -98,11 +103,11 @@ DataCleaning = function(Data)
 #' @export
 #'
 
-GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kendall')
+GeneralCor = function(df, cor1 = 'pearson', cor2 = 'polychoric', cor3 = 'spearman')
 {
   cor_value <- NULL
 
-  cor_fun <- function(pos_1, pos_2, cor1 = 'pearson', cor2 = 'biserial', cor3 = 'kendall', cor4 = 'polychloric')
+  cor_fun <- function(pos_1, pos_2)
   {
 
     #Same value , we return 1
@@ -113,7 +118,7 @@ GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kend
       return(cor_value)
     }
 
-    #If one factor and one numeric
+    #If both numeric
     if(class(df[[pos_1]])[1] %in% c("numeric") && class(df[[pos_2]])[1] %in% c("numeric"))
     {
       if(cor1 == 'pearson')
@@ -126,9 +131,9 @@ GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kend
     #If both are factor check
     if(class(df[[pos_1]])[1] %in% c("factor") && class(df[[pos_2]])[1] %in% c("factor"))
     {
-      if(cor2 == 'Polychloric') #binary
+      if(cor3 == 'spearman') #binary
       {
-        cor_value  <- correlation::cor_test(df, x = names(df)[pos_1], y = names(df)[pos_2] , method = 'Polychloric')$r
+        cor_value  <- correlation::cor_test(df, x = names(df)[pos_1], y = names(df)[pos_2] , method = 'spearman')$r
       }
     }
 
@@ -139,9 +144,14 @@ GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kend
       {
         cor_value  <- correlation::cor_test(df, x = names(df)[pos_1], y = names(df)[pos_2] , method = 'polychoric')$r
       }
+
+      if(cor2 == 'PointBiserial') #binary
+      {
+        cor_value  <- correlation::cor_test(df, x = names(df)[pos_1], y = names(df)[pos_2] , method = 'biserial')$r
+      }
     }
 
-    #
+    #for ordered factors
     if(class(df[[pos_1]])[1] %in% c("ordered") && class(df[[pos_2]])[1] %in% c("ordered"))
     {
       if(cor2 == 'polychoric') #binary
@@ -169,7 +179,8 @@ GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kend
   #Computing the matrix
   corrmat <- outer(1:ncol(df)
                    ,1:ncol(df)
-                   ,function(x, y) cor_fun(pos_1 = x, pos_2 = y,  cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kendall'))
+                   ,function(x, y) cor_fun(pos_1 = x, pos_2 = y))
+
 
   rownames(corrmat) <- colnames(df)
   colnames(corrmat) <- colnames(df)
@@ -214,7 +225,7 @@ GeneralCor = function(df, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'kend
 TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 0.7, RF_coverage = 0.95, num_features = 5,  plot = FALSE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'cramersV')
 {
   #ToDo
-  #Perform all subletting and initalizations here
+  #Perform all subletting and initialization here
   #Creating clusters based upon graph theory
 
   list1 = list()
@@ -225,9 +236,14 @@ TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 
   value <- NULL
 
   #Data Cleaning
-  Data <- DataCleaning(Data)
+  DataCleanRes <- DataCleaning(Data, Y_var = Y_var)
 
-  #note to add all data checks that are needed in the system
+  #Updating the values after cleaning
+  Y_var <- DataCleanRes$New_Dependent
+  Data <- DataCleanRes$Cleaned_Data
+
+  print(Y_var)
+  #Note to add all data checks that are needed in the system
 
   #If any NA values drop it
   Data[is.na(Data), ] <- 0
@@ -240,7 +256,7 @@ TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 
     return(Results)
   }
 
-  Data <- as.data.table(Data)
+  Data <- as.data.table(Data) #Redundant steps?
 
   ###Correlation matrix creation
   #Examine this further of course
@@ -297,7 +313,7 @@ TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 
     }
 
     #Getting every combination of variables possible
-    if(fast_calculation == TRUE)
+    if(fast_calculation == TRUE || prod(sapply(var_groups, length)) > 100)
     {
       result <- purrr::map(var_groups, 1)
       result <- as.data.frame(t(unlist(result)))
@@ -315,6 +331,10 @@ TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 
     for(i in 1:nrow(result))
     {
       Data_temp <- cbind(Data_nocor, Data[, unlist(result[i,]), with = FALSE])
+
+      print(ncol(Data_temp))
+      print(Y_var)
+      print(as.formula(paste(paste(Y_var, '~'), paste(colnames(Data_temp), collapse = "+"))))
 
       Rf <- ranger::ranger(as.formula(paste(paste(Y_var, '~'), paste(colnames(Data_temp), collapse = "+"))), data = Data_temp, mtry = ncol(Data_temp/3), importance = 'permutation')
       Rf_2 <- data.frame(Rf$variable.importance)

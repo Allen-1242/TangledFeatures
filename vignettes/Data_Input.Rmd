@@ -1,0 +1,19 @@
+---
+title: "Data_Input"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Data_Input}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(TangledFeatures)
+```
