@@ -51,7 +51,7 @@ If data_clean is set to 'TRUE' we follow a set of steps to clean the data includ
 
 Let's set the function and call it's various outputs 
 ```{r Function call}
-Results <- TangledFeatures(Data = TangledFeatures::Housing_Prices_dataset, Y_var = 'Sales_Price', Focus_variables = list(), corr_cutoff = 0.7, RF_coverage = 0.95, num_features = 5,  plot = TRUE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'cramersV')
+Results <- TangledFeatures(Data = TangledFeatures::Housing_Prices_dataset, Y_var = 'SalePrice', Focus_variables = list(), corr_cutoff = 0.7, RF_coverage = 0.95, num_features = 5,  plot = TRUE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'cramersV')
 ```
 
 ```{r Correlation Heatmap}

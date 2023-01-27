@@ -452,3 +452,39 @@ TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 
 
 }
 
+
+
+#Data <- TangledFeatures::Housing_Prices_dataset
+#Y_var <- 'SalePrice'
+
+# TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 0.7, RF_coverage = 0.95, num_features = 5,  plot = FALSE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'cramersV')
+# {
+#   #ToDo
+#   #Perform all subletting and initialization here
+#   #Creating clusters based upon graph theory
+#
+#   list1 = list()
+#   Results <- list()
+#   var1 <- NULL
+#   var2 <- NULL
+#   temp_var <- NULL
+#   value <- NULL
+#
+#   #Data Cleaning
+#   DataCleanRes <- DataCleaning(Data, Y_var = Y_var)
+#
+#   #Updating the values after cleaning
+#   Y_var <- DataCleanRes$New_Dependent
+#   Data <- DataCleanRes$Cleaned_Data
+#
+#   return(Y_var)
+# }
+# TangledFeatures(Data = Data, Y_var = 'SalePrice')
+
+
+
+
+
+
+
+
