@@ -242,7 +242,6 @@ TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 
   Y_var <- DataCleanRes$New_Dependent
   Data <- DataCleanRes$Cleaned_Data
 
-  print(Y_var)
   #Note to add all data checks that are needed in the system
 
   #If any NA values drop it
@@ -332,15 +331,9 @@ TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 
     {
       Data_temp <- cbind(Data_nocor, Data[, unlist(result[i,]), with = FALSE])
 
-      print(ncol(Data_temp))
-      print(Y_var)
-      print(as.formula(paste(paste(Y_var, '~'), paste(colnames(Data_temp), collapse = "+"))))
-
       Rf <- ranger::ranger(as.formula(paste(paste(Y_var, '~'), paste(colnames(Data_temp), collapse = "+"))), data = Data_temp, mtry = ncol(Data_temp/3), importance = 'permutation')
       Rf_2 <- data.frame(Rf$variable.importance)
       RF_list[[i]] <- Rf_2
-
-      print(i)
     }
 
   }else
@@ -351,7 +344,7 @@ TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 
   }
 
 
-  #Fast Aggregation across multiple frames
+  # #Fast Aggregation across multiple frames
   l <- lapply(RF_list, function(x) {x$RowName <- row.names(x) ; x})
   Res <- Reduce(function(...) merge(..., by = "RowName", all = TRUE), l)
 
@@ -362,7 +355,7 @@ TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 
                 value.var = "value")
 
 
-  #Taking the best variable from each group
+  # #Taking the best variable from each group
   if(dim(pairs_mat)[1] != 0)
   {
     for(bv in 1:nrow(var_groups))
@@ -370,7 +363,8 @@ TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 
       comp <- var_groups[bv]
       comp <- unlist(comp[[1]])
       temp <- Rf_2[which(Rf_2$RowName %in% comp)]
-      keep_var <- Rf_2$RowName[Rf_2$Rf == max(temp$Rf)]
+
+      keep_var <- Rf_2$RowName[Rf_2$Rf == max(temp$Rf)][1]
       rem_var <- comp[which(comp != keep_var)]
 
       #Dropping all values not needed
@@ -443,48 +437,9 @@ TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 
     igraph_plot <- c()
   }
 
-
   Results <- list('Final_Variables' = final_variables, 'Variable_groups' = var_groups,
                   'Correlation_heatmap' = heatmap,'Graph_plot' = igraph_plot)
-
 
   return(Results)
 
 }
-
-
-
-#Data <- TangledFeatures::Housing_Prices_dataset
-#Y_var <- 'SalePrice'
-
-# TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 0.7, RF_coverage = 0.95, num_features = 5,  plot = FALSE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'cramersV')
-# {
-#   #ToDo
-#   #Perform all subletting and initialization here
-#   #Creating clusters based upon graph theory
-#
-#   list1 = list()
-#   Results <- list()
-#   var1 <- NULL
-#   var2 <- NULL
-#   temp_var <- NULL
-#   value <- NULL
-#
-#   #Data Cleaning
-#   DataCleanRes <- DataCleaning(Data, Y_var = Y_var)
-#
-#   #Updating the values after cleaning
-#   Y_var <- DataCleanRes$New_Dependent
-#   Data <- DataCleanRes$Cleaned_Data
-#
-#   return(Y_var)
-# }
-# TangledFeatures(Data = Data, Y_var = 'SalePrice')
-
-
-
-
-
-
-
-
