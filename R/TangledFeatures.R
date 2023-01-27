@@ -222,7 +222,7 @@ GeneralCor = function(df, cor1 = 'pearson', cor2 = 'polychoric', cor3 = 'spearma
 
 #' @export
 #'
-TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 0.7, RF_coverage = 0.95, num_features = 5,  plot = FALSE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'cramersV')
+TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 0.7, RF_coverage = 0.95, num_features = 5,  plot = FALSE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'polychoric', cor3 = 'spearman')
 {
   #ToDo
   #Perform all subletting and initialization here
@@ -420,15 +420,33 @@ TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 
   ##Plotting function for correlation methods
   if(plot == TRUE)
   {
-    heatmap <- ggplot2::ggplot(data = pairs_mat, aes(x=var1, y=var2, fill=value)) +
+    #Heat map of the correlation
+    heatmap <- ggplot2::ggplot(data = head(pairs_mat_total, 300), aes(x=var1, y=var2, fill=value)) +
       geom_tile() +
-      geom_text(aes(var2, var1, label = value), size = 5) +
-      scale_fill_gradient2(low = "red", high = "green",
-                           limit = c(-1,1), name="Correlation") +
+      scale_fill_gradient2(low = "blue", high = "green",
+                           limit = c(-1,1), name = "Correlation") +
       theme(axis.title.x = element_blank(),
             axis.title.y = element_blank(),
             panel.background = element_blank())
 
+    #Correlation information matrix generation
+
+    #VariableA, #VariableB, Correlation Metric, Correlation Value, #Maybe a description of the metric
+
+
+
+
+
+    heatmap <- ggplot2::ggplot(data = head(pairs_mat_total, 300), aes(x=var1, y=var2, fill=value)) +
+      geom_tile() +
+      scale_fill_gradient2(low = "blue", high = "green",
+                           limit = c(-1,1), name = "Correlation") +
+      theme(axis.title.x = element_blank(),
+            axis.title.y = element_blank(),
+            panel.background = element_blank())
+
+
+    #Graph object of the correlation
     igraph_plot <- graph_from_adjacency_matrix(as(connects, "lsCMatrix"))
 
   }else

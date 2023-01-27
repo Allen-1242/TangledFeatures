@@ -14,8 +14,8 @@ TangledFeatures(
   plot = FALSE,
   fast_calculation = FALSE,
   cor1 = "pearson",
-  cor2 = "PointBiserial",
-  cor3 = "cramersV"
+  cor2 = "polychoric",
+  cor3 = "spearman"
 )
 }
 \arguments{

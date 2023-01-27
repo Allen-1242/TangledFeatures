@@ -51,13 +51,24 @@ If data_clean is set to 'TRUE' we follow a set of steps to clean the data includ
 
 Let's set the function and call it's various outputs 
 ```{r Function call}
-Results <- TangledFeatures(Data = TangledFeatures::Housing_Prices_dataset, Y_var = 'SalePrice', Focus_variables = list(), corr_cutoff = 0.7, RF_coverage = 0.95, num_features = 5,  plot = TRUE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'PointBiserial', cor3 = 'cramersV')
+Results <- TangledFeatures(Data = TangledFeatures::Housing_Prices_dataset, Y_var = 'SalePrice', Focus_variables = list(), corr_cutoff = 0.7, RF_coverage = 0.95, num_features = 5,  plot = TRUE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'polychoric', cor3 = 'spearman')
 ```
+
+The function returns visualizations and metrics about the correlation as well as other interesting metrics 
 
 ```{r Correlation Heatmap}
 Heatmap_plot <- Results$Correlation_heatmap
+plot(Heatmap_plot)
 ```
 
+For visualization purposes, we are only working with the top 20 variables. As we can see we can take the various relationships and visualize them on a single graph. TangledFeatures also returns the variables as well as the correlation metric used between them. 
+
+
 ```{r Correlation Graph}
-Heatmap_plot <- Results$Variable_groups
+Igraph_plot <- Results$Graph_plot
+plot(Igraph_plot)
 ```
+
+As we can see from the graph, using graph theory algorithms we can trace the interrelationships between the variables. There are two distinct groups that we can see that have about the same effect on the sales price. We can take a single variable from each group as the group representative. 
+
+
