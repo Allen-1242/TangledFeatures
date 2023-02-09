@@ -9,6 +9,8 @@ DataCleaning(Data, Y_var)
 }
 \arguments{
 \item{Data}{The imported Data Frame}
+
+\item{Y_var}{The X variable}
 }
 \value{
 The cleaned data. Please note that the data has been cleaned including column names, NA values and coerced to data table

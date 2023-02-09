@@ -32,7 +32,6 @@ library(correlation)
 library(data.table)
 library(fastDummies)
 library(ggplot2)
-library(psych)
 ```
 
 # Loading the Data
@@ -70,5 +69,8 @@ plot(Igraph_plot)
 ```
 
 As we can see from the graph, using graph theory algorithms we can trace the interrelationships between the variables. There are two distinct groups that we can see that have about the same effect on the sales price. We can take a single variable from each group as the group representative. 
+
+
+#here we are going to see the plot summary of this system
 
 

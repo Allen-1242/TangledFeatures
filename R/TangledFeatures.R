@@ -1,40 +1,21 @@
-#Loading libraries
-library(purrr)#Find an equivalent of this here
-library(dplyr)#Find data table equivalents of this
-library(janitor)
-library(MASS)
-
-library(ranger)
-library(igraph)
-library(Matrix)
-
-library(correlation)
-library(data.table)
-library(fastDummies)
-library(ggplot2)
-library(psych)
-
-
 #Loading the example dataset
 
 #' Housing prices dataset
 #' @name Housing_Prices_dataset
 #' @keywords datasets
 
-
-
 #' Automatic Data Cleaning
 #'
 #' @param Data The imported Data Frame
+#' @param Y_var The X variable
 #'
-#' @return The cleaned data. Please note that the data has been cleaned including column names, NA values and coerced to data table
+#' @return The cleaned data.
 #' @importFrom data.table :=
 #' @importFrom data.table .SD
 #' @export
 #'
 
-
-DataCleaning = function(Data, Y_var)
+DataCleaning <- function(Data, Y_var)
 {
   #Ordinal Encoding function
   encode_ordinal <- function(x, order = unique(x)) {
@@ -64,17 +45,17 @@ DataCleaning = function(Data, Y_var)
   changeCols_char <- colnames(Data)[which(as.vector(Data[,lapply(.SD, class)]) == "character")]
   Data[,(changeCols_char):= lapply(.SD, as.factor), .SDcols = changeCols_char]
 
-  #If there is a order to it, use ordinal encoding, note please change this to a faster method
-  for(i in 1:ncol(Data))
+  #If there is a order to it, use ordinal encoding, note please change this
+  for(i in seq(ncol(Data)))
   {
-    if(is.ordered(Data[, ..i]))
+    if(is.ordered(Data[[i]]))
     {
-      Data[, ..i] <- encode_ordinal(Data[, ..i])
+      Data[,i] <- encode_ordinal(Data[[i]])
     }
   }
 
   #Dummy creation of columns that are unordered factors
-  Data = fastDummies::dummy_cols(Data)
+  Data <- fastDummies::dummy_cols(Data)
   Data <- janitor::clean_names(Data)
 
   #Coerce to numeric data type
@@ -95,15 +76,15 @@ DataCleaning = function(Data, Y_var)
 #' Generalized Correlation function
 #'
 #' @param df The imported Data Frame
-#' @param cor1 The correlation metric between two continuous features. Defaults to pearson correlation
-#' @param cor2 The correlation metric between one categorical feature and one continuous feature. Defaults to biserial correlation correlation
-#' @param cor3 The correlation metric between two categorical features. Defaults to Cramers-V correlation
+#' @param cor1 The correlation metric bw two continuous features. Defaults to pearson
+#' @param cor2 The correlation metric bw one catg feature and one cont feature. Defaults to biserial
+#' @param cor3 The correlation metric bw two catg features. Defaults to Cramers-V
 #'
 #' @return Returns a correlation matrix containing the correlation values between the features
 #' @export
 #'
 
-GeneralCor = function(df, cor1 = 'pearson', cor2 = 'polychoric', cor3 = 'spearman')
+GeneralCor <- function(df, cor1 = 'pearson', cor2 = 'polychoric', cor3 = 'spearman')
 {
   cor_value <- NULL
 
@@ -114,7 +95,7 @@ GeneralCor = function(df, cor1 = 'pearson', cor2 = 'polychoric', cor3 = 'spearma
     if(identical(df[[pos_1]], df[[pos_2]]) || pos_1 == pos_2)
     {
 
-      cor_value = 1
+      cor_value <- 1
       return(cor_value)
     }
 
@@ -177,8 +158,8 @@ GeneralCor = function(df, cor1 = 'pearson', cor2 = 'polychoric', cor3 = 'spearma
   cor_fun <- Vectorize(cor_fun)
 
   #Computing the matrix
-  corrmat <- outer(1:ncol(df)
-                   ,1:ncol(df)
+  corrmat <- outer(seq(ncol(df))
+                   ,seq(ncol(df))
                    ,function(x, y) cor_fun(pos_1 = x, pos_2 = y))
 
 
@@ -222,7 +203,7 @@ GeneralCor = function(df, cor1 = 'pearson', cor2 = 'polychoric', cor3 = 'spearma
 
 #' @export
 #'
-TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 0.7, RF_coverage = 0.95, num_features = 5,  plot = FALSE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'polychoric', cor3 = 'spearman')
+TangledFeatures <- function(Data, Y_var, Focus_variables = list(), corr_cutoff = 0.7, RF_coverage = 0.95, num_features = 5,  plot = FALSE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'polychoric', cor3 = 'spearman')
 {
   #ToDo
   #Perform all subletting and initialization here
@@ -248,7 +229,7 @@ TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 
   Data[is.na(Data), ] <- 0
 
   #If any value is not a numeric or factor , we drop it
-  class_check <- data.table::as.data.table(sapply(Data, class))
+  class_check <- data.table::as.data.table(vapply(Data, class, 'character'))
   if(any(class_check$V1 %in% 'character'))
   {
     print('Please convert all chracter variables to factors or dummies')
@@ -270,32 +251,33 @@ TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 
   )
 
   #Sub-setting values only above threshold values
-  pairs_mat = pairs_mat_total[which(abs(pairs_mat_total$value) >= corr_cutoff & (pairs_mat_total$var1 != pairs_mat_total$var2)),]
+  pairs_mat <- pairs_mat_total[which(abs(pairs_mat_total$value) >= corr_cutoff & (pairs_mat_total$var1 != pairs_mat_total$var2)),]
   rownames(pairs_mat) <- NULL
 
 
   ##Start of Random Forest iterations
 
-  list1 = list()
+  list1 <- list()
 
   if(dim(pairs_mat)[1] != 0)
   {
-    for(j in 1:nrow(pairs_mat))
+    for(j in seq(nrow(pairs_mat)))
     {
-      list1[[j]] = c(pairs_mat[j,1], pairs_mat[j,2])
-      list1[[j]] = sort(list1[[j]])
+      list1[[j]] <- c(pairs_mat[j,1], pairs_mat[j,2])
+      list1[[j]] <- sort(list1[[j]])
     }
 
-    i = rep(1:length(list1), lengths(list1))
-    j = factor(unlist(list1))
-    tab = Matrix::sparseMatrix(i = i , j = as.integer(j), x = TRUE, dimnames= list(NULL, levels(j)))
-    connects = Matrix::tcrossprod(tab, boolArith = TRUE)
-    group = igraph::clusters(igraph::graph_from_adjacency_matrix(as(connects, "lsCMatrix")))$membership
+
+    i <- rep(seq(length(list1)), lengths(list1))
+    j <- factor(unlist(list1))
+    tab <- Matrix::sparseMatrix(i = i , j = as.integer(j), x = TRUE, dimnames= list(NULL, levels(j)))
+    connects <- Matrix::tcrossprod(tab, boolArith = TRUE)
+    group <- igraph::clusters(igraph::graph_from_adjacency_matrix(as(connects, "lMatrix")))$membership
     var_groups <- tapply(list1, group, function(x) sort(unique(unlist(x))))
     var_groups <- as.list(var_groups)
 
     #Condition to extract the focus variables
-    for(i in 1:length(var_groups))
+    for(i in seq(length(var_groups)))
     {
       if(any(var_groups[[i]] %in% Focus_variables))
       {
@@ -312,7 +294,7 @@ TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 
     }
 
     #Getting every combination of variables possible
-    if(fast_calculation == TRUE || prod(sapply(var_groups, length)) > 100)
+    if(fast_calculation == TRUE || prod(vapply(var_groups, length, length(var_groups))) > 100)
     {
       result <- purrr::map(var_groups, 1)
       result <- as.data.frame(t(unlist(result)))
@@ -327,7 +309,7 @@ TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 
     Data_nocor <- Data[,noncor_columns, with = FALSE]
 
     ##Start of the RF, note we need to add multiprocessing here
-    for(i in 1:nrow(result))
+    for(i in seq(nrow(result)))
     {
       Data_temp <- cbind(Data_nocor, Data[, unlist(result[i,]), with = FALSE])
 
@@ -358,7 +340,7 @@ TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 
   # #Taking the best variable from each group
   if(dim(pairs_mat)[1] != 0)
   {
-    for(bv in 1:nrow(var_groups))
+    for(bv in seq(nrow(var_groups)))
     {
       comp <- var_groups[bv]
       comp <- unlist(comp[[1]])
@@ -375,7 +357,7 @@ TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 
     temp_var <- c(Rf_2$RowName, Y_var)
     Data_temp <- Data[,temp_var, with = FALSE]
 
-    Rf_list = list()
+    Rf_list <- list()
 
     #Here let us add RFE in order to run it
 
@@ -421,7 +403,7 @@ TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 
   if(plot == TRUE)
   {
     #Heat map of the correlation
-    heatmap <- ggplot2::ggplot(data = head(pairs_mat_total, 300), aes(x=var1, y=var2, fill=value)) +
+    heatmap <- ggplot2::ggplot(data = pairs_mat_total, aes(x=var1, y=var2, fill=value)) +
       geom_tile() +
       scale_fill_gradient2(low = "blue", high = "green",
                            limit = c(-1,1), name = "Correlation") +
@@ -430,14 +412,7 @@ TangledFeatures = function(Data, Y_var, Focus_variables = list(), corr_cutoff = 
             panel.background = element_blank())
 
     #Correlation information matrix generation
-
-    #VariableA, #VariableB, Correlation Metric, Correlation Value, #Maybe a description of the metric
-
-
-
-
-
-    heatmap <- ggplot2::ggplot(data = head(pairs_mat_total, 300), aes(x=var1, y=var2, fill=value)) +
+    heatmap <- ggplot2::ggplot(data = pairs_mat_total, aes(x=var1, y=var2, fill=value)) +
       geom_tile() +
       scale_fill_gradient2(low = "blue", high = "green",
                            limit = c(-1,1), name = "Correlation") +
