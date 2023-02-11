@@ -10,7 +10,6 @@ TangledFeatures(
   Focus_variables = list(),
   corr_cutoff = 0.7,
   RF_coverage = 0.95,
-  num_features = 5,
   plot = FALSE,
   fast_calculation = FALSE,
   cor1 = "pearson",
@@ -29,8 +28,6 @@ TangledFeatures(
 
 \item{RF_coverage}{The Random Forest coverage of explainable. Defaults to 95 percent}
 
-\item{num_features}{The number of features returned within a random forest}
-
 \item{plot}{Return if plotting is to be done. Binary True or False}
 
 \item{fast_calculation}{Returns variable list without many Random Forest iterations by simply picking a variable from a correlated group}
@@ -42,8 +39,11 @@ TangledFeatures(
 \item{cor3}{The correlation metric between two categorical features. Defaults to CramersV correlation}
 }
 \value{
-Returns a list of variables that are ready for future modelling
+Returns a list of variables that are ready for future modelling, along with other metrics
 }
 \description{
 The main TangledFeatures function
+}
+\examples{
+TangledFeatures(Data = TangledFeatures::Advertisement, Y_var = 'Sales')
 }

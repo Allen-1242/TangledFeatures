@@ -2,9 +2,15 @@ Package: TangledFeatures
 Type: Package
 Title: Feature Selection in Highly Correlated Spaces
 Version: 0.1.0
-Author: Allen Daniel Sunny
+Authors@R: person(given = "Allen",
+             family = "Sunny",
+             role = c("aut", "cre"),
+             email = "allensunny1242@gmail.com")
 Maintainer: Allen Daniel Sunny <allensunny1242@gmail.com>
-Description: Picks out the best features in a highly correlated and high dimensional space.
+Description: Feature selection algorithm that extracts features in highly correlated spaces.
+             The extracted features are meant to be fed into simple explainible models such as 
+             linear or logistic regression. The package is useful in the field of explainable 
+             modelling or XAI as a way to understand variable behavior.  
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

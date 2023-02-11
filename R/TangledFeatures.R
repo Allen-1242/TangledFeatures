@@ -3,6 +3,12 @@
 #' Housing prices dataset
 #' @name Housing_Prices_dataset
 #' @keywords datasets
+NULL
+
+#' Advertisement dataset
+#' @name Advertisement
+#' @keywords datasets
+NULL
 
 #' Automatic Data Cleaning
 #'
@@ -10,6 +16,9 @@
 #' @param Y_var The X variable
 #'
 #' @return The cleaned data.
+#' @examples
+#' DataCleaning(Data = TangledFeatures::Housing_Prices_dataset,  Y_var = 'SalePrice')
+
 #' @importFrom data.table :=
 #' @importFrom data.table .SD
 #' @export
@@ -22,7 +31,6 @@ DataCleaning <- function(Data, Y_var)
     x <- as.numeric(factor(x, levels = order, exclude = NULL))
     x
   }
-
 
   if(!is.data.frame(Data)) stop("Value needs to be a data frame or data table")
 
@@ -40,10 +48,12 @@ DataCleaning <- function(Data, Y_var)
   #Storing the new column dependent value
   New_Yvar <- colnames(Data)[Y_var_pos]
 
-
   #Make all characters factors
   changeCols_char <- colnames(Data)[which(as.vector(Data[,lapply(.SD, class)]) == "character")]
-  Data[,(changeCols_char):= lapply(.SD, as.factor), .SDcols = changeCols_char]
+  if(length(changeCols_char) != 0)
+  {
+    Data[,(changeCols_char):= lapply(.SD, as.factor), .SDcols = changeCols_char]
+  }
 
   #If there is a order to it, use ordinal encoding, note please change this
   for(i in seq(ncol(Data)))
@@ -55,32 +65,39 @@ DataCleaning <- function(Data, Y_var)
   }
 
   #Dummy creation of columns that are unordered factors
-  Data <- fastDummies::dummy_cols(Data)
+  if(length(changeCols_char) != 0)
+  {
+    Data <- fastDummies::dummy_cols(Data)
+  }
+
   Data <- janitor::clean_names(Data)
 
   #Coerce to numeric data type
   changeCols_num <- colnames(Data)[which(as.vector(Data[,lapply(.SD, class)]) == "integer")]
-  Data[,(changeCols_num):= lapply(.SD, as.numeric), .SDcols = changeCols_num]
+  if(length(changeCols_num) != 0)
+  {
+    Data[,(changeCols_num):= lapply(.SD, as.numeric), .SDcols = changeCols_num]
+  }
 
   #Dropping the previous columns
   Data[, (changeCols_char) := NULL]
 
   #numeric type creation of ordered factor columns
-
   Data_Results <- list('Cleaned_Data' = Data, 'New_Dependent' = New_Yvar)
 
   return(Data_Results)
 }
 
-#Generalized Correlation Function
 #' Generalized Correlation function
 #'
 #' @param df The imported Data Frame
-#' @param cor1 The correlation metric bw two continuous features. Defaults to pearson
-#' @param cor2 The correlation metric bw one catg feature and one cont feature. Defaults to biserial
-#' @param cor3 The correlation metric bw two catg features. Defaults to Cramers-V
-#'
+#' @param cor1 The correlation metric between two continuous features. Defaults to pearson
+#' @param cor2 The correlation metric between one categorical feature and one cont feature. Defaults to biserial
+#' @param cor3 The correlation metric between two categorical features. Defaults to Cramers-V
 #' @return Returns a correlation matrix containing the correlation values between the features
+
+#' @examples
+#' GeneralCor(df = TangledFeatures::Advertisement)
 #' @export
 #'
 
@@ -169,7 +186,6 @@ GeneralCor <- function(df, cor1 = 'pearson', cor2 = 'polychoric', cor3 = 'spearm
   return(corrmat)
 }
 
-#Main Tangled Features Function
 #' The main TangledFeatures function
 #'
 #' @param Data The imported Data Frame
@@ -177,14 +193,16 @@ GeneralCor <- function(df, cor1 = 'pearson', cor2 = 'polychoric', cor3 = 'spearm
 #' @param Focus_variables The list of variables that you wish to give a certain bias to in the correlation matrix
 #' @param corr_cutoff The correlation cutoff variable. Defaults to 0.8
 #' @param RF_coverage The Random Forest coverage of explainable. Defaults to 95 percent
-#' @param num_features The number of features returned within a random forest
 #' @param plot Return if plotting is to be done. Binary True or False
 #' @param fast_calculation Returns variable list without many Random Forest iterations by simply picking a variable from a correlated group
 #' @param cor1 The correlation metric between two continuous features. Defaults to pearson correlation
 #' @param cor2 The correlation metric between one categorical feature and one continuous feature. Defaults to bi serial correlation correlation
 #' @param cor3 The correlation metric between two categorical features. Defaults to CramersV correlation
 #'
-#' @return Returns a list of variables that are ready for future modelling
+#' @return Returns a list of variables that are ready for future modelling, along with other metrics
+#' @examples
+#' TangledFeatures(Data = TangledFeatures::Advertisement, Y_var = 'Sales')
+
 #' @importFrom methods as
 #' @importFrom stats as.formula
 #' @importFrom stats na.omit
@@ -203,18 +221,19 @@ GeneralCor <- function(df, cor1 = 'pearson', cor2 = 'polychoric', cor3 = 'spearm
 
 #' @export
 #'
-TangledFeatures <- function(Data, Y_var, Focus_variables = list(), corr_cutoff = 0.7, RF_coverage = 0.95, num_features = 5,  plot = FALSE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'polychoric', cor3 = 'spearman')
+TangledFeatures <- function(Data, Y_var, Focus_variables = list(), corr_cutoff = 0.7, RF_coverage = 0.95, plot = FALSE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'polychoric', cor3 = 'spearman')
 {
   #ToDo
   #Perform all subletting and initialization here
   #Creating clusters based upon graph theory
 
-  list1 = list()
+  list1 <- list()
   Results <- list()
   var1 <- NULL
   var2 <- NULL
   temp_var <- NULL
   value <- NULL
+  connects <- c()
 
   #Data Cleaning
   DataCleanRes <- DataCleaning(Data, Y_var = Y_var)
@@ -232,7 +251,7 @@ TangledFeatures <- function(Data, Y_var, Focus_variables = list(), corr_cutoff =
   class_check <- data.table::as.data.table(vapply(Data, class, 'character'))
   if(any(class_check$V1 %in% 'character'))
   {
-    print('Please convert all chracter variables to factors or dummies')
+    warning('Please convert all chracter variables to factors or dummies')
     return(Results)
   }
 
@@ -266,7 +285,6 @@ TangledFeatures <- function(Data, Y_var, Focus_variables = list(), corr_cutoff =
       list1[[j]] <- c(pairs_mat[j,1], pairs_mat[j,2])
       list1[[j]] <- sort(list1[[j]])
     }
-
 
     i <- rep(seq(length(list1)), lengths(list1))
     j <- factor(unlist(list1))
@@ -305,7 +323,7 @@ TangledFeatures <- function(Data, Y_var, Focus_variables = list(), corr_cutoff =
 
     RF_list <- list()
 
-    noncor_columns = colnames(Data)[! colnames(Data) %in% unlist(var_groups)]
+    noncor_columns <- colnames(Data)[! colnames(Data) %in% unlist(var_groups)]
     Data_nocor <- Data[,noncor_columns, with = FALSE]
 
     ##Start of the RF, note we need to add multiprocessing here
@@ -320,9 +338,11 @@ TangledFeatures <- function(Data, Y_var, Focus_variables = list(), corr_cutoff =
 
   }else
   {
-    Rf <- ranger(as.formula(paste(paste(Y_var, '~'), paste(colnames(Data_temp), collapse = "+"))), data = Data_temp, mtry = ncol(Data_temp/3), importance = 'permutation')
+    RF_list <- list()
+
+    Rf <- ranger(as.formula(paste(paste(Y_var, '~'), paste(colnames(Data[, -Y_var, with = FALSE]), collapse = "+"))), data = Data, mtry = ncol(Data[, -Y_var, with = FALSE]/3), importance = 'permutation')
     Rf_2 <- data.frame(Rf$variable.importance)
-    RF_list[[i]] <- Rf_2
+    RF_list[[1]] <- Rf_2
   }
 
 
@@ -360,7 +380,6 @@ TangledFeatures <- function(Data, Y_var, Focus_variables = list(), corr_cutoff =
     Rf_list <- list()
 
     #Here let us add RFE in order to run it
-
     Rf <- ranger(as.formula(paste(paste(Y_var, '~'), paste(colnames(Data_temp), collapse = "+"))), data = Data_temp, mtry = ncol(Data_temp)/3, importance = 'permutation')
     Rf_2 <- data.frame(Rf$variable.importance)
     Rf_2$Var <- rownames(Rf_2)
@@ -397,32 +416,65 @@ TangledFeatures <- function(Data, Y_var, Focus_variables = list(), corr_cutoff =
     #   temp <- which(Rf_2$Rf > Rf_info_cutoff)[1]
     # }
 
+  }else
+  {
+    var_groups <- c()
+    Rf <- ranger(as.formula(paste(paste(Y_var, '~'), paste(colnames(Data[, -Y_var, with = FALSE]), collapse = "+"))), data = Data, mtry = ncol(Data[, -Y_var, with = FALSE]/3), importance = 'permutation')
+    Rf_2 <- data.frame(Rf$variable.importance)
+    Rf_2$Var <- rownames(Rf_2)
+
+    ##Simple 95%optimization
+
+    #To ADD: RFE with cv based methods
+
+
+    # #Final RF based on RFE , based on num_features or coverage methods
+    # if(#Method is based on coverage)
+
+    Rf_2 <- na.omit(Rf_2)
+    Rf_2 <- Rf_2[which(Rf_2$Rf.variable.importance  >= 0),]
+    Rf_2 <- Rf_2[order(-Rf_2$Rf.variable.importance),]
+
+    Rf_2$Rf.variable.importance <- Rf_2$Rf.variable.importance/sum(Rf_2$Rf.variable.importance)
+    x1 <- cumsum(Rf_2$Rf.variable.importance)
+    temp <- which(x1 > RF_coverage)[1]
+
+    final_variables <- Rf_2[0:temp,]$Var
+
   }
 
   ##Plotting function for correlation methods
   if(plot == TRUE)
   {
-    #Heat map of the correlation
-    heatmap <- ggplot2::ggplot(data = pairs_mat_total, aes(x=var1, y=var2, fill=value)) +
-      geom_tile() +
-      scale_fill_gradient2(low = "blue", high = "green",
-                           limit = c(-1,1), name = "Correlation") +
-      theme(axis.title.x = element_blank(),
-            axis.title.y = element_blank(),
-            panel.background = element_blank())
+    if(length(connects) != 0)
+    {
+      #Heat map of the correlation
+      heatmap <- ggplot2::ggplot(data = pairs_mat_total, aes(x=var1, y=var2, fill=value)) +
+        geom_tile() +
+        scale_fill_gradient2(low = "blue", high = "green",
+                             limit = c(-1,1), name = "Correlation") +
+        theme(axis.title.x = element_blank(),
+              axis.title.y = element_blank(),
+              panel.background = element_blank())
 
-    #Correlation information matrix generation
-    heatmap <- ggplot2::ggplot(data = pairs_mat_total, aes(x=var1, y=var2, fill=value)) +
-      geom_tile() +
-      scale_fill_gradient2(low = "blue", high = "green",
-                           limit = c(-1,1), name = "Correlation") +
-      theme(axis.title.x = element_blank(),
-            axis.title.y = element_blank(),
-            panel.background = element_blank())
+      #Correlation information matrix generation
+      heatmap <- ggplot2::ggplot(data = pairs_mat_total, aes(x=var1, y=var2, fill=value)) +
+        geom_tile() +
+        scale_fill_gradient2(low = "blue", high = "green",
+                             limit = c(-1,1), name = "Correlation") +
+        theme(axis.title.x = element_blank(),
+              axis.title.y = element_blank(),
+              panel.background = element_blank())
 
 
-    #Graph object of the correlation
-    igraph_plot <- graph_from_adjacency_matrix(as(connects, "lsCMatrix"))
+      #Graph object of the correlation
+      igraph_plot <- graph_from_adjacency_matrix(as(connects, "lMatrix"))
+    }else
+    {
+      heatmap <- c()
+      igraph_plot <- c()
+    }
+
 
   }else
   {
