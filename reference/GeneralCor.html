@@ -63,15 +63,15 @@
 
 
 <dt>cor1</dt>
-<dd><p>The correlation metric between two continuous features. Defaults to pearson correlation</p></dd>
+<dd><p>The correlation metric between two continuous features. Defaults to pearson</p></dd>
 
 
 <dt>cor2</dt>
-<dd><p>The correlation metric between one categorical feature and one continuous feature. Defaults to biserial correlation correlation</p></dd>
+<dd><p>The correlation metric between one categorical feature and one cont feature. Defaults to biserial</p></dd>
 
 
 <dt>cor3</dt>
-<dd><p>The correlation metric between two categorical features. Defaults to Cramers-V correlation</p></dd>
+<dd><p>The correlation metric between two categorical features. Defaults to Cramers-V</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -81,12 +81,22 @@
 <p>Returns a correlation matrix containing the correlation values between the features</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">GeneralCor</span><span class="op">(</span>df <span class="op">=</span> <span class="fu">TangledFeatures</span><span class="fu">::</span><span class="va"><a href="Advertisement.html">Advertisement</a></span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   TV      Radio  Newspaper     Sales</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> TV        1.00000000 0.05480866 0.05664787 0.7822244</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Radio     0.05480866 1.00000000 0.35410375 0.5762226</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Newspaper 0.05664787 0.35410375 1.00000000 0.2282990</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sales     0.78222442 0.57622257 0.22829903 1.0000000</span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Allen Daniel Sunny.</p>
+  <p></p><p>Developed by Allen Sunny.</p>
 </div>
 
 <div class="pkgdown-footer-right">

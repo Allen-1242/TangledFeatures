@@ -140,9 +140,7 @@ data including cleaning column names, dummy column creation and removal
 of NAs. Please read more in the ‘Data_input’ section.</p>
 <p>Let’s set the function and call it’s various outputs</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">Results</span> <span class="op">&lt;-</span> <span class="fu">TangledFeatures</span><span class="fu">::</span><span class="fu"><a href="../reference/TangledFeatures.html">TangledFeatures</a></span><span class="op">(</span>Data <span class="op">=</span> <span class="fu">TangledFeatures</span><span class="fu">::</span><span class="va"><a href="../reference/Housing_Prices_dataset.html">Housing_Prices_dataset</a></span>, Y_var <span class="op">=</span> <span class="st">'SalePrice'</span>, Focus_variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, corr_cutoff <span class="op">=</span> <span class="fl">0.7</span>, RF_coverage <span class="op">=</span> <span class="fl">0.95</span>, num_features <span class="op">=</span> <span class="fl">5</span>,  plot <span class="op">=</span> <span class="cn">TRUE</span>, fast_calculation <span class="op">=</span> <span class="cn">FALSE</span>, cor1 <span class="op">=</span> <span class="st">'pearson'</span>, cor2 <span class="op">=</span> <span class="st">'polychoric'</span>, cor3 <span class="op">=</span> <span class="st">'spearman'</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: as(&lt;nsCMatrix&gt;, "lsCMatrix") is deprecated since Matrix 1.5-0; do</span></span>
-<span><span class="co">#&gt; as(., "lMatrix") instead</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">Results</span> <span class="op">&lt;-</span> <span class="fu">TangledFeatures</span><span class="fu">::</span><span class="fu"><a href="../reference/TangledFeatures.html">TangledFeatures</a></span><span class="op">(</span>Data <span class="op">=</span> <span class="fu">TangledFeatures</span><span class="fu">::</span><span class="va"><a href="../reference/Housing_Prices_dataset.html">Housing_Prices_dataset</a></span>, Y_var <span class="op">=</span> <span class="st">'SalePrice'</span>, Focus_variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, corr_cutoff <span class="op">=</span> <span class="fl">0.7</span>, RF_coverage <span class="op">=</span> <span class="fl">0.95</span>,  plot <span class="op">=</span> <span class="cn">TRUE</span>, fast_calculation <span class="op">=</span> <span class="cn">FALSE</span>, cor1 <span class="op">=</span> <span class="st">'pearson'</span>, cor2 <span class="op">=</span> <span class="st">'polychoric'</span>, cor3 <span class="op">=</span> <span class="st">'spearman'</span><span class="op">)</span></span></code></pre></div>
 <p>The function returns visualizations and metrics about the correlation
 as well as other interesting metrics</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -172,7 +170,7 @@ representative.</p>
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Allen Daniel Sunny.</p>
+<p>Developed by Allen Sunny.</p>
 </div>
 
 <div class="pkgdown-footer-right">

@@ -59,7 +59,6 @@
 <span>  Focus_variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  corr_cutoff <span class="op">=</span> <span class="fl">0.7</span>,</span>
 <span>  RF_coverage <span class="op">=</span> <span class="fl">0.95</span>,</span>
-<span>  num_features <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>  plot <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  fast_calculation <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  cor1 <span class="op">=</span> <span class="st">"pearson"</span>,</span>
@@ -90,10 +89,6 @@
 <dd><p>The Random Forest coverage of explainable. Defaults to 95 percent</p></dd>
 
 
-<dt>num_features</dt>
-<dd><p>The number of features returned within a random forest</p></dd>
-
-
 <dt>plot</dt>
 <dd><p>Return if plotting is to be done. Binary True or False</p></dd>
 
@@ -118,15 +113,33 @@
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>Returns a list of variables that are ready for future modelling</p>
+<p>Returns a list of variables that are ready for future modelling, along with other metrics</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">TangledFeatures</span><span class="op">(</span>Data <span class="op">=</span> <span class="fu">TangledFeatures</span><span class="fu">::</span><span class="va"><a href="Advertisement.html">Advertisement</a></span>, Y_var <span class="op">=</span> <span class="st">'Sales'</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>length(LHS)==0; no columns to delete or assign RHS to.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Final_Variables</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "tv"    "radio"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Variable_groups</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Correlation_heatmap</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Graph_plot</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Allen Daniel Sunny.</p>
+  <p></p><p>Developed by Allen Sunny.</p>
 </div>
 
 <div class="pkgdown-footer-right">
