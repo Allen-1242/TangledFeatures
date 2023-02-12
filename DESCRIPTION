@@ -1,7 +1,7 @@
 Type: Package
 Package: TangledFeatures
 Title: Feature Selection in Highly Correlated Spaces
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: 
     person("Allen", "Sunny", , "allensunny1242@gmail.com", role = c("aut", "cre"))
 Description: Feature selection algorithm that extracts features in highly
