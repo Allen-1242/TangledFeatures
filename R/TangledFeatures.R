@@ -197,7 +197,7 @@ GeneralCor <- function(df, cor1 = 'pearson', cor2 = 'polychoric', cor3 = 'spearm
 #' @param fast_calculation Returns variable list without many Random Forest iterations by simply picking a variable from a correlated group
 #' @param cor1 The correlation metric between two continuous features. Defaults to pearson correlation
 #' @param cor2 The correlation metric between one categorical feature and one continuous feature. Defaults to bi serial correlation correlation
-#' @param cor3 The correlation metric between two categorical features. Defaults to CramersV correlation
+#' @param cor3 The correlation metric between two categorical features. Defaults to Cramer's V.
 #'
 #' @return Returns a list of variables that are ready for future modelling, along with other metrics
 #' @examples
