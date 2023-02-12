@@ -5,8 +5,8 @@ Version: 0.1.1
 Authors@R: 
     person("Allen", "Sunny", , "allensunny1242@gmail.com", role = c("aut", "cre"))
 Description: Feature selection algorithm that extracts features in highly
-    correlated spaces.  The extracted features are meant to be fed into
-    simple explainable models such as linear or logistic regression. The
+    correlated spaces. The extracted features are meant to be fed into
+    simple explainable models such as linear or logistic regressions. The
     package is useful in the field of explainable modelling as a
     way to understand variable behavior.
 License: MIT + file LICENSE
