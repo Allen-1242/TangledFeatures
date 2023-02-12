@@ -36,7 +36,7 @@ TangledFeatures(
 
 \item{cor2}{The correlation metric between one categorical feature and one continuous feature. Defaults to bi serial correlation correlation}
 
-\item{cor3}{The correlation metric between two categorical features. Defaults to CramersV correlation}
+\item{cor3}{The correlation metric between two categorical features. Defaults to Cramer's V.}
 }
 \value{
 Returns a list of variables that are ready for future modelling, along with other metrics
