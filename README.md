@@ -5,7 +5,7 @@
 [![CRAN status](https://www.r-pkg.org/badges/version/TangledFeatures)](https://CRAN.R-project.org/package=TangledFeatures)
 <!-- badges: end -->
 
-Note: The website will be updated in the coming days. Please drop me an email at allensunny1242@gmail.com if there are any issues.
+Note: This website will be updated in the coming days. Please drop me an email at allensunny1242@gmail.com if there are any issues.
 
 TangledFeatures is a feature selection method that extracts needed variables in highly interrelated spaces. It does not alter the nature of the variables and is hence an alternative to traditional dimensionality reduction techniques. 
 
