@@ -221,7 +221,7 @@ GeneralCor <- function(df, cor1 = 'pearson', cor2 = 'polychoric', cor3 = 'spearm
 
 #' @export
 #'
-TangledFeatures <- function(Data, Y_var, Focus_variables = list(), corr_cutoff = 0.7, RF_coverage = 0.95, plot = FALSE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'polychoric', cor3 = 'spearman')
+TangledFeatures <- function(Data, Y_var, Focus_variables = list(), corr_cutoff = 0.85, RF_coverage = 0.95, plot = FALSE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'polychoric', cor3 = 'spearman')
 {
   #ToDo
   #Perform all subletting and initialization here
@@ -449,22 +449,15 @@ TangledFeatures <- function(Data, Y_var, Focus_variables = list(), corr_cutoff =
     if(length(connects) != 0)
     {
       #Heat map of the correlation
-      heatmap <- ggplot2::ggplot(data = pairs_mat_total, aes(x=var1, y=var2, fill=value)) +
-        geom_tile() +
-        scale_fill_gradient2(low = "blue", high = "green",
-                             limit = c(-1,1), name = "Correlation") +
-        theme(axis.title.x = element_blank(),
-              axis.title.y = element_blank(),
-              panel.background = element_blank())
-
-      #Correlation information matrix generation
-      heatmap <- ggplot2::ggplot(data = pairs_mat_total, aes(x=var1, y=var2, fill=value)) +
-        geom_tile() +
-        scale_fill_gradient2(low = "blue", high = "green",
-                             limit = c(-1,1), name = "Correlation") +
-        theme(axis.title.x = element_blank(),
-              axis.title.y = element_blank(),
-              panel.background = element_blank())
+      heatmap <- ggplot(data = pairs_mat, aes(var1, var2, fill = value))+
+        geom_tile(color = "blue")+
+        scale_fill_gradient2(low = "purple", high = "red", mid = "white",
+                             midpoint = 0, limit = c(-1,1), space = "Lab",
+                             name="Correlation") +
+        theme_minimal()+
+        theme(axis.text.x = element_text(angle = 45, vjust = 1,
+                                         size = 12, hjust = 1))+
+        coord_fixed()
 
 
       #Graph object of the correlation

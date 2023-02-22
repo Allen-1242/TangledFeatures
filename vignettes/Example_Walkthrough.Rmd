@@ -26,12 +26,20 @@ In this example, we will be using the Boston housing prices data set. There has 
 TangledFeatures primarily relies on ggplot2 for visualization, data.table for data manipulation, correlation for various correlation methods and ranger for its Random Forest implementation. There are a few other packages used to run certain features. 
 
 ```{r libraries}
+options(warn=-1)
+
 library(ranger)
 library(igraph)
 library(correlation)
 library(data.table)
 library(fastDummies)
 library(ggplot2)
+
+library(randomForest)
+library(caret)
+library(broom)
+library(broom.mixed)
+library(jtools)   
 ```
 
 # Loading the Data
@@ -39,9 +47,14 @@ To read the data we can use the simple:
 
 ```{r Data Loading}
 data <- TangledFeatures::Housing_Prices_dataset
+data <- data[,-1]
 ```
 
 This loads the base Boston housing prices data set. You can load this into the TangledFeatures function by:
+
+```{r Data Cleaning}
+Data <- TangledFeatures::DataCleaning(Data = data, Y_var = 'SalePrice')
+```
 
 # Correlation and treating the data
 We are able to identify the variable class for each variable and assign it's appropriate correlation relationship with other variables. Read more in the Correlation section.
@@ -50,7 +63,7 @@ If data_clean is set to 'TRUE' we follow a set of steps to clean the data includ
 
 Let's set the function and call it's various outputs 
 ```{r Function call}
-Results <- TangledFeatures::TangledFeatures(Data = TangledFeatures::Housing_Prices_dataset, Y_var = 'SalePrice', Focus_variables = list(), corr_cutoff = 0.7, RF_coverage = 0.95,  plot = TRUE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'polychoric', cor3 = 'spearman')
+Results <- TangledFeatures::TangledFeatures(Data = TangledFeatures::Housing_Prices_dataset[,-1], Y_var = 'SalePrice', Focus_variables = list(), corr_cutoff = 0.85, RF_coverage = 0.95,  plot = TRUE, fast_calculation = FALSE, cor1 = 'pearson', cor2 = 'polychoric', cor3 = 'spearman')
 ```
 
 The function returns visualizations and metrics about the correlation as well as other interesting metrics 
@@ -72,5 +85,74 @@ As we can see from the graph, using graph theory algorithms we can trace the int
 
 
 #here we are going to see the plot summary of this system
+```{r Final Variables}
+TangledFeatures_variables <- Results$Final_Variables
+```
 
+```{r TangledFeatures LM}
+formula_TangledFeatures <- as.formula(paste(paste("sale_price", '~'), paste(TangledFeatures_variables, collapse = "+")))
+lm_TangledFeatures <- lm(formula_TangledFeatures, data = Data$Cleaned_Data)
+
+summary(lm_TangledFeatures)
+```
+
+#Let's see what other feature selection techniques give 
+
+```{r Other feature selection techniques}
+library(caret)
+
+control=trainControl(method = "cv",number=5)
+
+set.seed(849)
+lasso_caret <- train(x = Data$Cleaned_Data[ , -c("sale_price")], y = Data$Cleaned_Data$sale_price, method = "glmnet",
+                trControl=control,preProc = c("center","scale"),
+                tuneGrid = expand.grid(alpha = 1,
+                                       lambda = 0))
+
+lasso_coef <- coef(lasso_caret$finalModel,lasso_caret$bestTune$lambda)
+```
+
+```{r lasso regression}
+lasso_coef <- as.data.frame(as.matrix(lasso_coef))
+lasso_coef$Var_names <- rownames(lasso_coef) 
+
+lasso_variables <- lasso_coef[which(lasso_coef$s1 > 0),]$Var_names
+
+formula_lasso <- as.formula(paste(paste("sale_price", '~'), paste(lasso_variables[-1], collapse = "+")))
+lm_lasso <- lm(formula_lasso, data = Data$Cleaned_Data)
+
+summary(lm_lasso)
+```
+
+
+
+```{r RFE RandomForest}
+
+control <- rfeControl(functions = rfFuncs, # random forest
+                      method = "repeatedcv", # repeated cv
+                      repeats = 2, # number of repeats
+                      number = 2) # number of folds
+
+
+result_rfe <- rfe(x = Data$Cleaned_Data[ , -c("sale_price")], 
+                   y = Data$Cleaned_Data$sale_price, 
+                   sizes = c(1:40),
+                   rfeControl = control)
+result_rfe <- predictors(result_rfe)
+```
+
+#Running an lm model on this data
+```{r RFE lm}
+formula_rfe <- as.formula(paste(paste("sale_price", '~'), paste(result_rfe, collapse = "+")))
+lm_rfe <- lm(formula_rfe, data = Data$Cleaned_Data)
+
+summary(lm_rfe)
+```
+```{r Plotting and Comparing Coefficents}
+plot_summs(lm_rfe, lm_lasso, lm_TangledFeatures, coefs = names(lm_TangledFeatures$coef)[-c(1:2, 8)], 
+            omit.coefs = c("bsmt_qual_ex"),
+            model.names = c("Random Forest RFE", "Lasso", "TangledFeatures"))
+```
+
+If we take a look at the coefficent behavior across three models for a few variables, we can see that it is largely the same with one major exception. Both Lasso and RandomForest make the garage_area variable negative, as it is highly correlated with other variables. TangledFeatures takes the variable interrelationships into account and generates the correct variable effect. 
 

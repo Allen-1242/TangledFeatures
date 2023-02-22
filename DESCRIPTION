@@ -24,7 +24,12 @@ Imports:
     Matrix,
     methods,
     purrr,
-    ranger
+    ranger,
+    broom,
+    broom.mixed,
+    caret,
+    jtools,
+    randomForest
 Suggests: 
     knitr,
     R.rsp,

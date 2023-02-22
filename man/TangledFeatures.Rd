@@ -8,7 +8,7 @@ TangledFeatures(
   Data,
   Y_var,
   Focus_variables = list(),
-  corr_cutoff = 0.7,
+  corr_cutoff = 0.85,
   RF_coverage = 0.95,
   plot = FALSE,
   fast_calculation = FALSE,
