@@ -29,7 +29,8 @@ Imports:
     broom.mixed,
     caret,
     jtools,
-    randomForest
+    randomForest,
+    glmnet
 Suggests: 
     knitr,
     R.rsp,
