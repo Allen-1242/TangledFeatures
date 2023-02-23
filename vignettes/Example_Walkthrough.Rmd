@@ -101,11 +101,12 @@ summary(lm_TangledFeatures)
 
 ```{r Other feature selection techniques}
 library(caret)
+library(glmnet)
 
-control=trainControl(method = "cv",number=5)
+control = caret::trainControl(method = "cv",number=5)
 
 set.seed(849)
-lasso_caret <- train(x = Data$Cleaned_Data[ , -c("sale_price")], y = Data$Cleaned_Data$sale_price, method = "glmnet",
+lasso_caret <- caret::train(x = Data$Cleaned_Data[ , -c("sale_price")], y = Data$Cleaned_Data$sale_price, method = "glmnet",
                 trControl=control,preProc = c("center","scale"),
                 tuneGrid = expand.grid(alpha = 1,
                                        lambda = 0))
@@ -129,13 +130,14 @@ summary(lm_lasso)
 
 ```{r RFE RandomForest}
 
-control <- rfeControl(functions = rfFuncs, # random forest
+
+control <- caret::rfeControl(functions = rfFuncs, # random forest
                       method = "repeatedcv", # repeated cv
                       repeats = 2, # number of repeats
                       number = 2) # number of folds
 
 
-result_rfe <- rfe(x = Data$Cleaned_Data[ , -c("sale_price")], 
+result_rfe <- caret::rfe(x = Data$Cleaned_Data[ , -c("sale_price")], 
                    y = Data$Cleaned_Data$sale_price, 
                    sizes = c(1:40),
                    rfeControl = control)
@@ -150,7 +152,7 @@ lm_rfe <- lm(formula_rfe, data = Data$Cleaned_Data)
 summary(lm_rfe)
 ```
 ```{r Plotting and Comparing Coefficents}
-plot_summs(lm_rfe, lm_lasso, lm_TangledFeatures, coefs = names(lm_TangledFeatures$coef)[-c(1:2, 8)], 
+jtools::plot_summs(lm_rfe, lm_lasso, lm_TangledFeatures, coefs = names(lm_TangledFeatures$coef)[-c(1:2, 8)], 
             omit.coefs = c("bsmt_qual_ex"),
             model.names = c("Random Forest RFE", "Lasso", "TangledFeatures"))
 ```
