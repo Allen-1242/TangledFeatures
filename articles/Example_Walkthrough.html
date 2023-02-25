@@ -89,10 +89,10 @@
 TangledFeatures and how it outperforms traditional feature selection
 methods. We will also compare the raw accuracy of the package to other
 methods including standard black box approaches.</p>
-<p>TangledFeatures relies on the dataset inputted to be correct. If
-there are categorical features please ensure that it is inputted as a
-factor. If done correctly, the package will identify the correct
-correlation based relationships between the variables.</p>
+<p>TangledFeatures relies on the dataset input to be correct. If there
+are categorical features please ensure that it is input as a factor. If
+done correctly, the package will identify the correct correlation based
+relationships between the variables.</p>
 <p>In this example, we will be using the Boston housing prices data set.
 There has been some cleaning beforehand so that all the variables are in
 the correct orientation.</p>
@@ -107,40 +107,19 @@ other packages used to run certain features.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>warn<span class="op">=</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span></span>
 <span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/imbs-hl/ranger" class="external-link">ranger</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://igraph.org" class="external-link">igraph</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'igraph'</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     decompose, spectrum</span></span>
-<span><span class="co">#&gt; The following object is masked from 'package:base':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     union</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://easystats.github.io/correlation/" class="external-link">correlation</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jacobkap/fastDummies" class="external-link">fastDummies</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/imbs-hl/ranger" class="external-link">ranger</a></span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://igraph.org" class="external-link">igraph</a></span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://easystats.github.io/correlation/" class="external-link">correlation</a></span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jacobkap/fastDummies" class="external-link">fastDummies</a></span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/" class="external-link">randomForest</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; randomForest 4.7-1.1</span></span>
-<span><span class="co">#&gt; Type rfNews() to see new features/changes/bug fixes.</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'randomForest'</span></span>
-<span><span class="co">#&gt; The following object is masked from 'package:ggplot2':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     margin</span></span>
-<span><span class="co">#&gt; The following object is masked from 'package:ranger':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     importance</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://glmnet.stanford.edu" class="external-link">glmnet</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading required package: Matrix</span></span>
-<span><span class="co">#&gt; Loaded glmnet 4.1-6</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/topepo/caret/" class="external-link">caret</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading required package: lattice</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://broom.tidymodels.org/" class="external-link">broom</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bbolker/broom.mixed" class="external-link">broom.mixed</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jtools.jacob-long.com" class="external-link">jtools</a></span><span class="op">)</span>   </span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/" class="external-link">randomForest</a></span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://glmnet.stanford.edu" class="external-link">glmnet</a></span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/topepo/caret/" class="external-link">caret</a></span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://broom.tidymodels.org/" class="external-link">broom</a></span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bbolker/broom.mixed" class="external-link">broom.mixed</a></span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jtools.jacob-long.com" class="external-link">jtools</a></span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="loading-the-data">Loading the Data<a class="anchor" aria-label="anchor" href="#loading-the-data"></a>
@@ -149,10 +128,169 @@ other packages used to run certain features.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">TangledFeatures</span><span class="fu">::</span><span class="va"><a href="../reference/Housing_Prices_dataset.html">Housing_Prices_dataset</a></span></span>
 <span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">[</span>,<span class="op">-</span><span class="fl">1</span><span class="op">]</span></span></code></pre></div>
-<p>This loads the base Boston housing prices data set. You can load this
-into the TangledFeatures function by:</p>
+<p>Let’s call the package’s data cleaning function. It sets dummy
+columns, cleans NAs and a host of other functions. You can check the
+‘Data Cleaning’ tab for further information. We also need to define the
+dependent variable.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Data</span> <span class="op">&lt;-</span> <span class="fu">TangledFeatures</span><span class="fu">::</span><span class="fu"><a href="../reference/DataCleaning.html">DataCleaning</a></span><span class="op">(</span>Data <span class="op">=</span> <span class="va">data</span>, Y_var <span class="op">=</span> <span class="st">'SalePrice'</span><span class="op">)</span></span></code></pre></div>
+<p>Let’s see the new columns</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">Data</span><span class="op">$</span><span class="va">Cleaned_Data</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   [1] "ms_sub_class"            "lot_frontage"           </span></span>
+<span><span class="co">#&gt;   [3] "lot_area"                "overall_qual"           </span></span>
+<span><span class="co">#&gt;   [5] "overall_cond"            "year_built"             </span></span>
+<span><span class="co">#&gt;   [7] "year_remod_add"          "mas_vnr_area"           </span></span>
+<span><span class="co">#&gt;   [9] "bsmt_fin_sf1"            "bsmt_fin_sf2"           </span></span>
+<span><span class="co">#&gt;  [11] "bsmt_unf_sf"             "total_bsmt_sf"          </span></span>
+<span><span class="co">#&gt;  [13] "x1st_flr_sf"             "x2nd_flr_sf"            </span></span>
+<span><span class="co">#&gt;  [15] "low_qual_fin_sf"         "gr_liv_area"            </span></span>
+<span><span class="co">#&gt;  [17] "bsmt_full_bath"          "bsmt_half_bath"         </span></span>
+<span><span class="co">#&gt;  [19] "full_bath"               "half_bath"              </span></span>
+<span><span class="co">#&gt;  [21] "bedroom_abv_gr"          "kitchen_abv_gr"         </span></span>
+<span><span class="co">#&gt;  [23] "tot_rms_abv_grd"         "fireplaces"             </span></span>
+<span><span class="co">#&gt;  [25] "garage_yr_blt"           "garage_cars"            </span></span>
+<span><span class="co">#&gt;  [27] "garage_area"             "wood_deck_sf"           </span></span>
+<span><span class="co">#&gt;  [29] "open_porch_sf"           "enclosed_porch"         </span></span>
+<span><span class="co">#&gt;  [31] "x3ssn_porch"             "screen_porch"           </span></span>
+<span><span class="co">#&gt;  [33] "pool_area"               "misc_val"               </span></span>
+<span><span class="co">#&gt;  [35] "mo_sold"                 "yr_sold"                </span></span>
+<span><span class="co">#&gt;  [37] "sale_price"              "ms_zoning_c_all"        </span></span>
+<span><span class="co">#&gt;  [39] "ms_zoning_fv"            "ms_zoning_rh"           </span></span>
+<span><span class="co">#&gt;  [41] "ms_zoning_rl"            "ms_zoning_rm"           </span></span>
+<span><span class="co">#&gt;  [43] "street_grvl"             "street_pave"            </span></span>
+<span><span class="co">#&gt;  [45] "alley_0"                 "alley_grvl"             </span></span>
+<span><span class="co">#&gt;  [47] "alley_pave"              "lot_shape_ir1"          </span></span>
+<span><span class="co">#&gt;  [49] "lot_shape_ir2"           "lot_shape_ir3"          </span></span>
+<span><span class="co">#&gt;  [51] "lot_shape_reg"           "land_contour_bnk"       </span></span>
+<span><span class="co">#&gt;  [53] "land_contour_hls"        "land_contour_low"       </span></span>
+<span><span class="co">#&gt;  [55] "land_contour_lvl"        "utilities_all_pub"      </span></span>
+<span><span class="co">#&gt;  [57] "utilities_no_se_wa"      "lot_config_corner"      </span></span>
+<span><span class="co">#&gt;  [59] "lot_config_cul_d_sac"    "lot_config_fr2"         </span></span>
+<span><span class="co">#&gt;  [61] "lot_config_fr3"          "lot_config_inside"      </span></span>
+<span><span class="co">#&gt;  [63] "land_slope_gtl"          "land_slope_mod"         </span></span>
+<span><span class="co">#&gt;  [65] "land_slope_sev"          "neighborhood_blmngtn"   </span></span>
+<span><span class="co">#&gt;  [67] "neighborhood_blueste"    "neighborhood_br_dale"   </span></span>
+<span><span class="co">#&gt;  [69] "neighborhood_brk_side"   "neighborhood_clear_cr"  </span></span>
+<span><span class="co">#&gt;  [71] "neighborhood_collg_cr"   "neighborhood_crawfor"   </span></span>
+<span><span class="co">#&gt;  [73] "neighborhood_edwards"    "neighborhood_gilbert"   </span></span>
+<span><span class="co">#&gt;  [75] "neighborhood_idotrr"     "neighborhood_meadow_v"  </span></span>
+<span><span class="co">#&gt;  [77] "neighborhood_mitchel"    "neighborhood_n_ames"    </span></span>
+<span><span class="co">#&gt;  [79] "neighborhood_no_ridge"   "neighborhood_n_pk_vill" </span></span>
+<span><span class="co">#&gt;  [81] "neighborhood_nridg_ht"   "neighborhood_nw_ames"   </span></span>
+<span><span class="co">#&gt;  [83] "neighborhood_old_town"   "neighborhood_sawyer"    </span></span>
+<span><span class="co">#&gt;  [85] "neighborhood_sawyer_w"   "neighborhood_somerst"   </span></span>
+<span><span class="co">#&gt;  [87] "neighborhood_stone_br"   "neighborhood_swisu"     </span></span>
+<span><span class="co">#&gt;  [89] "neighborhood_timber"     "neighborhood_veenker"   </span></span>
+<span><span class="co">#&gt;  [91] "condition1_artery"       "condition1_feedr"       </span></span>
+<span><span class="co">#&gt;  [93] "condition1_norm"         "condition1_pos_a"       </span></span>
+<span><span class="co">#&gt;  [95] "condition1_pos_n"        "condition1_rr_ae"       </span></span>
+<span><span class="co">#&gt;  [97] "condition1_rr_an"        "condition1_rr_ne"       </span></span>
+<span><span class="co">#&gt;  [99] "condition1_rr_nn"        "condition2_artery"      </span></span>
+<span><span class="co">#&gt; [101] "condition2_feedr"        "condition2_norm"        </span></span>
+<span><span class="co">#&gt; [103] "condition2_pos_a"        "condition2_pos_n"       </span></span>
+<span><span class="co">#&gt; [105] "condition2_rr_ae"        "condition2_rr_an"       </span></span>
+<span><span class="co">#&gt; [107] "condition2_rr_nn"        "bldg_type_1fam"         </span></span>
+<span><span class="co">#&gt; [109] "bldg_type_2fm_con"       "bldg_type_duplex"       </span></span>
+<span><span class="co">#&gt; [111] "bldg_type_twnhs"         "bldg_type_twnhs_e"      </span></span>
+<span><span class="co">#&gt; [113] "house_style_1_5fin"      "house_style_1_5unf"     </span></span>
+<span><span class="co">#&gt; [115] "house_style_1story"      "house_style_2_5fin"     </span></span>
+<span><span class="co">#&gt; [117] "house_style_2_5unf"      "house_style_2story"     </span></span>
+<span><span class="co">#&gt; [119] "house_style_s_foyer"     "house_style_s_lvl"      </span></span>
+<span><span class="co">#&gt; [121] "roof_style_flat"         "roof_style_gable"       </span></span>
+<span><span class="co">#&gt; [123] "roof_style_gambrel"      "roof_style_hip"         </span></span>
+<span><span class="co">#&gt; [125] "roof_style_mansard"      "roof_style_shed"        </span></span>
+<span><span class="co">#&gt; [127] "roof_matl_cly_tile"      "roof_matl_comp_shg"     </span></span>
+<span><span class="co">#&gt; [129] "roof_matl_membran"       "roof_matl_metal"        </span></span>
+<span><span class="co">#&gt; [131] "roof_matl_roll"          "roof_matl_tar_grv"      </span></span>
+<span><span class="co">#&gt; [133] "roof_matl_wd_shake"      "roof_matl_wd_shngl"     </span></span>
+<span><span class="co">#&gt; [135] "exterior1st_asb_shng"    "exterior1st_asph_shn"   </span></span>
+<span><span class="co">#&gt; [137] "exterior1st_brk_comm"    "exterior1st_brk_face"   </span></span>
+<span><span class="co">#&gt; [139] "exterior1st_c_block"     "exterior1st_cemnt_bd"   </span></span>
+<span><span class="co">#&gt; [141] "exterior1st_hd_board"    "exterior1st_im_stucc"   </span></span>
+<span><span class="co">#&gt; [143] "exterior1st_metal_sd"    "exterior1st_plywood"    </span></span>
+<span><span class="co">#&gt; [145] "exterior1st_stone"       "exterior1st_stucco"     </span></span>
+<span><span class="co">#&gt; [147] "exterior1st_vinyl_sd"    "exterior1st_wd_sdng"    </span></span>
+<span><span class="co">#&gt; [149] "exterior1st_wd_shing"    "exterior2nd_asb_shng"   </span></span>
+<span><span class="co">#&gt; [151] "exterior2nd_asph_shn"    "exterior2nd_brk_cmn"    </span></span>
+<span><span class="co">#&gt; [153] "exterior2nd_brk_face"    "exterior2nd_c_block"    </span></span>
+<span><span class="co">#&gt; [155] "exterior2nd_cment_bd"    "exterior2nd_hd_board"   </span></span>
+<span><span class="co">#&gt; [157] "exterior2nd_im_stucc"    "exterior2nd_metal_sd"   </span></span>
+<span><span class="co">#&gt; [159] "exterior2nd_other"       "exterior2nd_plywood"    </span></span>
+<span><span class="co">#&gt; [161] "exterior2nd_stone"       "exterior2nd_stucco"     </span></span>
+<span><span class="co">#&gt; [163] "exterior2nd_vinyl_sd"    "exterior2nd_wd_sdng"    </span></span>
+<span><span class="co">#&gt; [165] "exterior2nd_wd_shng"     "mas_vnr_type_0"         </span></span>
+<span><span class="co">#&gt; [167] "mas_vnr_type_brk_cmn"    "mas_vnr_type_brk_face"  </span></span>
+<span><span class="co">#&gt; [169] "mas_vnr_type_none"       "mas_vnr_type_stone"     </span></span>
+<span><span class="co">#&gt; [171] "exter_qual_ex"           "exter_qual_fa"          </span></span>
+<span><span class="co">#&gt; [173] "exter_qual_gd"           "exter_qual_ta"          </span></span>
+<span><span class="co">#&gt; [175] "exter_cond_ex"           "exter_cond_fa"          </span></span>
+<span><span class="co">#&gt; [177] "exter_cond_gd"           "exter_cond_po"          </span></span>
+<span><span class="co">#&gt; [179] "exter_cond_ta"           "foundation_brk_til"     </span></span>
+<span><span class="co">#&gt; [181] "foundation_c_block"      "foundation_p_conc"      </span></span>
+<span><span class="co">#&gt; [183] "foundation_slab"         "foundation_stone"       </span></span>
+<span><span class="co">#&gt; [185] "foundation_wood"         "bsmt_qual_0"            </span></span>
+<span><span class="co">#&gt; [187] "bsmt_qual_ex"            "bsmt_qual_fa"           </span></span>
+<span><span class="co">#&gt; [189] "bsmt_qual_gd"            "bsmt_qual_ta"           </span></span>
+<span><span class="co">#&gt; [191] "bsmt_cond_0"             "bsmt_cond_fa"           </span></span>
+<span><span class="co">#&gt; [193] "bsmt_cond_gd"            "bsmt_cond_po"           </span></span>
+<span><span class="co">#&gt; [195] "bsmt_cond_ta"            "bsmt_exposure_0"        </span></span>
+<span><span class="co">#&gt; [197] "bsmt_exposure_av"        "bsmt_exposure_gd"       </span></span>
+<span><span class="co">#&gt; [199] "bsmt_exposure_mn"        "bsmt_exposure_no"       </span></span>
+<span><span class="co">#&gt; [201] "bsmt_fin_type1_0"        "bsmt_fin_type1_alq"     </span></span>
+<span><span class="co">#&gt; [203] "bsmt_fin_type1_blq"      "bsmt_fin_type1_glq"     </span></span>
+<span><span class="co">#&gt; [205] "bsmt_fin_type1_lw_q"     "bsmt_fin_type1_rec"     </span></span>
+<span><span class="co">#&gt; [207] "bsmt_fin_type1_unf"      "bsmt_fin_type2_0"       </span></span>
+<span><span class="co">#&gt; [209] "bsmt_fin_type2_alq"      "bsmt_fin_type2_blq"     </span></span>
+<span><span class="co">#&gt; [211] "bsmt_fin_type2_glq"      "bsmt_fin_type2_lw_q"    </span></span>
+<span><span class="co">#&gt; [213] "bsmt_fin_type2_rec"      "bsmt_fin_type2_unf"     </span></span>
+<span><span class="co">#&gt; [215] "heating_floor"           "heating_gas_a"          </span></span>
+<span><span class="co">#&gt; [217] "heating_gas_w"           "heating_grav"           </span></span>
+<span><span class="co">#&gt; [219] "heating_oth_w"           "heating_wall"           </span></span>
+<span><span class="co">#&gt; [221] "heating_qc_ex"           "heating_qc_fa"          </span></span>
+<span><span class="co">#&gt; [223] "heating_qc_gd"           "heating_qc_po"          </span></span>
+<span><span class="co">#&gt; [225] "heating_qc_ta"           "central_air_n"          </span></span>
+<span><span class="co">#&gt; [227] "central_air_y"           "electrical_0"           </span></span>
+<span><span class="co">#&gt; [229] "electrical_fuse_a"       "electrical_fuse_f"      </span></span>
+<span><span class="co">#&gt; [231] "electrical_fuse_p"       "electrical_mix"         </span></span>
+<span><span class="co">#&gt; [233] "electrical_s_brkr"       "kitchen_qual_ex"        </span></span>
+<span><span class="co">#&gt; [235] "kitchen_qual_fa"         "kitchen_qual_gd"        </span></span>
+<span><span class="co">#&gt; [237] "kitchen_qual_ta"         "functional_maj1"        </span></span>
+<span><span class="co">#&gt; [239] "functional_maj2"         "functional_min1"        </span></span>
+<span><span class="co">#&gt; [241] "functional_min2"         "functional_mod"         </span></span>
+<span><span class="co">#&gt; [243] "functional_sev"          "functional_typ"         </span></span>
+<span><span class="co">#&gt; [245] "fireplace_qu_0"          "fireplace_qu_ex"        </span></span>
+<span><span class="co">#&gt; [247] "fireplace_qu_fa"         "fireplace_qu_gd"        </span></span>
+<span><span class="co">#&gt; [249] "fireplace_qu_po"         "fireplace_qu_ta"        </span></span>
+<span><span class="co">#&gt; [251] "garage_type_0"           "garage_type_2types"     </span></span>
+<span><span class="co">#&gt; [253] "garage_type_attchd"      "garage_type_basment"    </span></span>
+<span><span class="co">#&gt; [255] "garage_type_built_in"    "garage_type_car_port"   </span></span>
+<span><span class="co">#&gt; [257] "garage_type_detchd"      "garage_finish_0"        </span></span>
+<span><span class="co">#&gt; [259] "garage_finish_fin"       "garage_finish_r_fn"     </span></span>
+<span><span class="co">#&gt; [261] "garage_finish_unf"       "garage_qual_0"          </span></span>
+<span><span class="co">#&gt; [263] "garage_qual_ex"          "garage_qual_fa"         </span></span>
+<span><span class="co">#&gt; [265] "garage_qual_gd"          "garage_qual_po"         </span></span>
+<span><span class="co">#&gt; [267] "garage_qual_ta"          "garage_cond_0"          </span></span>
+<span><span class="co">#&gt; [269] "garage_cond_ex"          "garage_cond_fa"         </span></span>
+<span><span class="co">#&gt; [271] "garage_cond_gd"          "garage_cond_po"         </span></span>
+<span><span class="co">#&gt; [273] "garage_cond_ta"          "paved_drive_n"          </span></span>
+<span><span class="co">#&gt; [275] "paved_drive_p"           "paved_drive_y"          </span></span>
+<span><span class="co">#&gt; [277] "pool_qc_0"               "pool_qc_ex"             </span></span>
+<span><span class="co">#&gt; [279] "pool_qc_fa"              "pool_qc_gd"             </span></span>
+<span><span class="co">#&gt; [281] "fence_0"                 "fence_gd_prv"           </span></span>
+<span><span class="co">#&gt; [283] "fence_gd_wo"             "fence_mn_prv"           </span></span>
+<span><span class="co">#&gt; [285] "fence_mn_ww"             "misc_feature_0"         </span></span>
+<span><span class="co">#&gt; [287] "misc_feature_gar2"       "misc_feature_othr"      </span></span>
+<span><span class="co">#&gt; [289] "misc_feature_shed"       "misc_feature_ten_c"     </span></span>
+<span><span class="co">#&gt; [291] "sale_type_cod"           "sale_type_con"          </span></span>
+<span><span class="co">#&gt; [293] "sale_type_con_ld"        "sale_type_con_li"       </span></span>
+<span><span class="co">#&gt; [295] "sale_type_con_lw"        "sale_type_cwd"          </span></span>
+<span><span class="co">#&gt; [297] "sale_type_new"           "sale_type_oth"          </span></span>
+<span><span class="co">#&gt; [299] "sale_type_wd"            "sale_condition_abnorml" </span></span>
+<span><span class="co">#&gt; [301] "sale_condition_adj_land" "sale_condition_alloca"  </span></span>
+<span><span class="co">#&gt; [303] "sale_condition_family"   "sale_condition_normal"  </span></span>
+<span><span class="co">#&gt; [305] "sale_condition_partial"</span></span></code></pre></div>
+<p>As we can see post cleaning, we have created many new columns.</p>
 </div>
 <div class="section level2">
 <h2 id="correlation-and-treating-the-data">Correlation and treating the data<a class="anchor" aria-label="anchor" href="#correlation-and-treating-the-data"></a>
@@ -160,35 +298,67 @@ into the TangledFeatures function by:</p>
 <p>We are able to identify the variable class for each variable and
 assign it’s appropriate correlation relationship with other variables.
 Read more in the Correlation section.</p>
-<p>If data_clean is set to ‘TRUE’ we follow a set of steps to clean the
-data including cleaning column names, dummy column creation and removal
-of NAs. Please read more in the ‘Data_input’ section.</p>
-<p>Let’s set the function and call it’s various outputs</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<p>Let’s call the main package function.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Results</span> <span class="op">&lt;-</span> <span class="fu">TangledFeatures</span><span class="fu">::</span><span class="fu"><a href="../reference/TangledFeatures.html">TangledFeatures</a></span><span class="op">(</span>Data <span class="op">=</span> <span class="fu">TangledFeatures</span><span class="fu">::</span><span class="va"><a href="../reference/Housing_Prices_dataset.html">Housing_Prices_dataset</a></span><span class="op">[</span>,<span class="op">-</span><span class="fl">1</span><span class="op">]</span>, Y_var <span class="op">=</span> <span class="st">'SalePrice'</span>, Focus_variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, corr_cutoff <span class="op">=</span> <span class="fl">0.85</span>, RF_coverage <span class="op">=</span> <span class="fl">0.95</span>,  plot <span class="op">=</span> <span class="cn">TRUE</span>, fast_calculation <span class="op">=</span> <span class="cn">FALSE</span>, cor1 <span class="op">=</span> <span class="st">'pearson'</span>, cor2 <span class="op">=</span> <span class="st">'polychoric'</span>, cor3 <span class="op">=</span> <span class="st">'spearman'</span><span class="op">)</span></span></code></pre></div>
 <p>The function returns visualizations and metrics about the correlation
-as well as other interesting metrics</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+as well as other interesting outputs.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Heatmap_plot</span> <span class="op">&lt;-</span> <span class="va">Results</span><span class="op">$</span><span class="va">Correlation_heatmap</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">Heatmap_plot</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Example_Walkthrough_files/figure-html/Correlation%20Heatmap-1.png" width="700"></p>
 <p>For visualization purposes, we are only working with the top 20
-variables. As we can see we can take the various relationships and
-visualize them on a single graph. TangledFeatures also returns the
-variables as well as the correlation metric used between them.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+variables. We can take the various relationships and visualize them on a
+single graph. TangledFeatures also returns the variables as well as the
+correlation metric used between them.</p>
+<p>From the graph we can broadly see that there are two clusters of
+interrelated variables, basement related variables and garage related
+variables. Additionally there are smaller clusters.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Igraph_plot</span> <span class="op">&lt;-</span> <span class="va">Results</span><span class="op">$</span><span class="va">Graph_plot</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">Igraph_plot</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Example_Walkthrough_files/figure-html/Correlation%20Graph-1.png" width="700"></p>
-<p>As we can see from the graph, using graph theory algorithms we can
-trace the interrelationships between the variables. There are two
-distinct groups that we can see that have about the same effect on the
-sales price. We can take a single variable from each group as the group
-representative.</p>
-<p>#here we are going to see the plot summary of this system</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">TangledFeatures_variables</span> <span class="op">&lt;-</span> <span class="va">Results</span><span class="op">$</span><span class="va">Final_Variables</span></span></code></pre></div>
+<p>TangledFeatures uses graph theory algorithms to define clusters of
+interrelated variables. From the network plot we can see the two
+clusters that we observed in the heatmap, as well as a few other
+clusters.</p>
+<p>Let’s see the correlation between the sales price and the other
+variables. We are plotting only significant correlations above 0.4 and
+below -0.4 for space.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">cor_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">Data</span><span class="op">$</span><span class="va">Cleaned_Data</span><span class="op">)</span><span class="op">[</span>,<span class="fl">37</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">cor_df</span><span class="op">$</span><span class="va">Correlation</span> <span class="op">&lt;-</span> <span class="va">cor_df</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span> </span>
+<span><span class="va">cor_df</span> <span class="op">&lt;-</span> <span class="va">cor_df</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="va">cor_df</span><span class="op">$</span><span class="va">Variable</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">cor_df</span><span class="op">)</span> </span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">cor_df</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
+<span></span>
+<span></span>
+<span><span class="va">cor_df_subset</span> <span class="op">&lt;-</span> <span class="va">cor_df</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">cor_df</span><span class="op">$</span><span class="va">Correlation</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0.4</span>,<span class="op">]</span></span>
+<span><span class="va">cor_df_subset</span> <span class="op">&lt;-</span> <span class="va">cor_df_subset</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="op">-</span><span class="va">cor_df_subset</span><span class="op">$</span><span class="va">Correlation</span><span class="op">)</span>, <span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">cor_df_subset</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
+<span><span class="va">cor_df_subset</span><span class="op">$</span><span class="va">Variable</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">cor_df_subset</span><span class="op">$</span><span class="va">Variable</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">cor_df_subset</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Correlation</span>, y <span class="op">=</span> <span class="va">Variable</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>            <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>stat<span class="op">=</span><span class="st">"identity"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>            <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html" class="external-link">scale_y_discrete</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="va">cor_df_subset</span><span class="op">$</span><span class="va">Variable</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code></pre></div>
+<p><img src="Example_Walkthrough_files/figure-html/Correlation%20Vs%20Sales-1.png" width="700"></p>
+<p>Although simple correlation is of course not indicative of a
+variable’s behavior in a linear model, this is a good starting place to
+see the relationships. Both garage and basement variables have both
+positive and negative relationships on the dependent variable. Let’s
+observe the positive relationship of Garage Area and the Sale price.</p>
+</div>
+<div class="section level2">
+<h2 id="features-selected-by-tangledfeatures">Features selected by TangledFeatures<a class="anchor" aria-label="anchor" href="#features-selected-by-tangledfeatures"></a>
+</h2>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">TangledFeatures_variables</span> <span class="op">&lt;-</span> <span class="va">Results</span><span class="op">$</span><span class="va">Final_Variables</span></span></code></pre></div>
+<p>Let us input the given features into a linear model and observe the
+behavior</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">formula_TangledFeatures</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/formula.html" class="external-link">as.formula</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"sale_price"</span>, <span class="st">'~'</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">TangledFeatures_variables</span>, collapse <span class="op">=</span> <span class="st">"+"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">lm_TangledFeatures</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">formula_TangledFeatures</span>, data <span class="op">=</span> <span class="va">Data</span><span class="op">$</span><span class="va">Cleaned_Data</span><span class="op">)</span></span>
 <span></span>
@@ -217,8 +387,13 @@ representative.</p>
 <span><span class="co">#&gt; Residual standard error: 36540 on 1452 degrees of freedom</span></span>
 <span><span class="co">#&gt; Multiple R-squared:  0.7895, Adjusted R-squared:  0.7885 </span></span>
 <span><span class="co">#&gt; F-statistic:   778 on 7 and 1452 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
-<p>#Let’s see what other feature selection techniques give</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<p>The features selected all seem to indicate significance and more
+importantly agree with the findings from our correlation analysis.</p>
+</div>
+<div class="section level2">
+<h2 id="lets-see-what-simple-lasso-gives">Let’s see what simple Lasso gives<a class="anchor" aria-label="anchor" href="#lets-see-what-simple-lasso-gives"></a>
+</h2>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/topepo/caret/" class="external-link">caret</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://glmnet.stanford.edu" class="external-link">glmnet</a></span><span class="op">)</span></span>
 <span></span>
@@ -226,12 +401,13 @@ representative.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">849</span><span class="op">)</span></span>
 <span><span class="va">lasso_caret</span> <span class="op">&lt;-</span> <span class="fu">caret</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/caret/man/train.html" class="external-link">train</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Data</span><span class="op">$</span><span class="va">Cleaned_Data</span><span class="op">[</span> , <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sale_price"</span><span class="op">)</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">Data</span><span class="op">$</span><span class="va">Cleaned_Data</span><span class="op">$</span><span class="va">sale_price</span>, method <span class="op">=</span> <span class="st">"glmnet"</span>,</span>
-<span>                trControl<span class="op">=</span><span class="va">control</span>,preProc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"center"</span>,<span class="st">"scale"</span><span class="op">)</span>,</span>
+<span>                trControl<span class="op">=</span><span class="va">control</span>, preProc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"center"</span>,<span class="st">"scale"</span><span class="op">)</span>,</span>
 <span>                tuneGrid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>                                       lambda <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">lasso_coef</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">lasso_caret</span><span class="op">$</span><span class="va">finalModel</span>,<span class="va">lasso_caret</span><span class="op">$</span><span class="va">bestTune</span><span class="op">$</span><span class="va">lambda</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<p>Let’s run a linear model with the variables we get from lasso</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lasso_coef</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">lasso_coef</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">lasso_coef</span><span class="op">$</span><span class="va">Var_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">lasso_coef</span><span class="op">)</span> </span>
 <span></span>
@@ -393,10 +569,16 @@ representative.</p>
 <span><span class="co">#&gt; Residual standard error: 26970 on 1325 degrees of freedom</span></span>
 <span><span class="co">#&gt; Multiple R-squared:  0.8953, Adjusted R-squared:  0.8848 </span></span>
 <span><span class="co">#&gt; F-statistic: 84.59 on 134 and 1325 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span></span>
-<span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu">caret</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/caret/man/rfeControl.html" class="external-link">rfeControl</a></span><span class="op">(</span>functions <span class="op">=</span> <span class="va">rfFuncs</span>, <span class="co"># random forest</span></span>
+<p>There are clearly a lot of variables. Most of them are insignificant
+and the coefficient direction varies wildly from what we have seen in
+correlation. This is a fairly bad model that seems to be significantly
+over fitting.</p>
+</div>
+<div class="section level2">
+<h2 id="lets-see-what-random-forest-rfe-gives">Let’s see what Random Forest RFE gives<a class="anchor" aria-label="anchor" href="#lets-see-what-random-forest-rfe-gives"></a>
+</h2>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu">caret</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/caret/man/rfeControl.html" class="external-link">rfeControl</a></span><span class="op">(</span>functions <span class="op">=</span> <span class="va">rfFuncs</span>, </span>
 <span>                      method <span class="op">=</span> <span class="st">"repeatedcv"</span>, <span class="co"># repeated cv</span></span>
 <span>                      repeats <span class="op">=</span> <span class="fl">2</span>, <span class="co"># number of repeats</span></span>
 <span>                      number <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="co"># number of folds</span></span>
@@ -404,11 +586,12 @@ representative.</p>
 <span></span>
 <span><span class="va">result_rfe</span> <span class="op">&lt;-</span> <span class="fu">caret</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/caret/man/rfe.html" class="external-link">rfe</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Data</span><span class="op">$</span><span class="va">Cleaned_Data</span><span class="op">[</span> , <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sale_price"</span><span class="op">)</span><span class="op">]</span>, </span>
 <span>                   y <span class="op">=</span> <span class="va">Data</span><span class="op">$</span><span class="va">Cleaned_Data</span><span class="op">$</span><span class="va">sale_price</span>, </span>
-<span>                   sizes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">40</span><span class="op">)</span>,</span>
+<span>                   sizes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">35</span><span class="op">)</span>,</span>
 <span>                   rfeControl <span class="op">=</span> <span class="va">control</span><span class="op">)</span></span>
 <span><span class="va">result_rfe</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/caret/man/predictors.html" class="external-link">predictors</a></span><span class="op">(</span><span class="va">result_rfe</span><span class="op">)</span></span></code></pre></div>
-<p>#Running an lm model on this data</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<p>This is about 10x slower than TangledFeatures. Let’s see the variable
+behavior in a linear model.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">formula_rfe</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/formula.html" class="external-link">as.formula</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"sale_price"</span>, <span class="st">'~'</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">result_rfe</span>, collapse <span class="op">=</span> <span class="st">"+"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">lm_rfe</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">formula_rfe</span>, data <span class="op">=</span> <span class="va">Data</span><span class="op">$</span><span class="va">Cleaned_Data</span><span class="op">)</span></span>
 <span></span>
@@ -419,66 +602,85 @@ representative.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Residuals:</span></span>
 <span><span class="co">#&gt;     Min      1Q  Median      3Q     Max </span></span>
-<span><span class="co">#&gt; -490154  -15036    -878   13707  272216 </span></span>
+<span><span class="co">#&gt; -484453  -15025   -1020   13777  274307 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Coefficients: (1 not defined because of singularities)</span></span>
+<span><span class="co">#&gt; Coefficients:</span></span>
 <span><span class="co">#&gt;                        Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
-<span><span class="co">#&gt; (Intercept)          -1.148e+06  1.544e+05  -7.437 1.77e-13 ***</span></span>
-<span><span class="co">#&gt; gr_liv_area           2.008e+01  1.888e+01   1.064 0.287705    </span></span>
-<span><span class="co">#&gt; overall_qual          1.634e+04  1.147e+03  14.238  &lt; 2e-16 ***</span></span>
-<span><span class="co">#&gt; total_bsmt_sf         9.466e+00  4.036e+00   2.345 0.019142 *  </span></span>
-<span><span class="co">#&gt; x1st_flr_sf           2.333e+01  1.934e+01   1.206 0.228037    </span></span>
-<span><span class="co">#&gt; x2nd_flr_sf           3.154e+01  1.909e+01   1.652 0.098772 .  </span></span>
-<span><span class="co">#&gt; year_built            4.191e+02  6.576e+01   6.374 2.48e-10 ***</span></span>
-<span><span class="co">#&gt; garage_cars           1.712e+04  2.884e+03   5.936 3.67e-09 ***</span></span>
-<span><span class="co">#&gt; garage_area          -4.418e+00  9.510e+00  -0.465 0.642289    </span></span>
-<span><span class="co">#&gt; bsmt_fin_sf1          8.435e+00  2.973e+00   2.837 0.004612 ** </span></span>
-<span><span class="co">#&gt; lot_area              4.363e-01  9.738e-02   4.480 8.05e-06 ***</span></span>
-<span><span class="co">#&gt; year_remod_add        1.605e+02  6.625e+01   2.423 0.015514 *  </span></span>
-<span><span class="co">#&gt; exter_qual_ta        -3.793e+04  5.207e+03  -7.283 5.37e-13 ***</span></span>
-<span><span class="co">#&gt; neighborhood_crawfor  2.371e+04  5.141e+03   4.611 4.37e-06 ***</span></span>
-<span><span class="co">#&gt; overall_cond          5.683e+03  1.011e+03   5.619 2.31e-08 ***</span></span>
-<span><span class="co">#&gt; ms_sub_class         -1.735e+02  2.479e+01  -7.000 3.93e-12 ***</span></span>
-<span><span class="co">#&gt; fireplace_qu_0       -2.974e+02  4.306e+03  -0.069 0.944944    </span></span>
-<span><span class="co">#&gt; ms_zoning_rm         -4.812e+03  4.532e+03  -1.062 0.288486    </span></span>
-<span><span class="co">#&gt; full_bath             4.610e+03  2.727e+03   1.690 0.091187 .  </span></span>
-<span><span class="co">#&gt; tot_rms_abv_grd       1.604e+03  1.153e+03   1.391 0.164409    </span></span>
-<span><span class="co">#&gt; fireplaces            4.713e+03  3.398e+03   1.387 0.165653    </span></span>
-<span><span class="co">#&gt; garage_type_detchd    1.039e+03  4.135e+03   0.251 0.801619    </span></span>
-<span><span class="co">#&gt; garage_yr_blt        -1.061e+01  3.239e+00  -3.276 0.001077 ** </span></span>
-<span><span class="co">#&gt; kitchen_qual_gd      -6.987e+03  2.487e+03  -2.809 0.005032 ** </span></span>
-<span><span class="co">#&gt; open_porch_sf        -2.404e+00  1.466e+01  -0.164 0.869763    </span></span>
-<span><span class="co">#&gt; ms_zoning_rl          1.414e+03  4.014e+03   0.352 0.724585    </span></span>
-<span><span class="co">#&gt; garage_type_attchd   -1.091e+03  3.467e+03  -0.315 0.753024    </span></span>
-<span><span class="co">#&gt; bsmt_full_bath        9.681e+03  2.309e+03   4.193 2.92e-05 ***</span></span>
-<span><span class="co">#&gt; exter_qual_gd        -2.550e+04  5.092e+03  -5.009 6.17e-07 ***</span></span>
-<span><span class="co">#&gt; mas_vnr_area          2.035e+01  5.806e+00   3.505 0.000471 ***</span></span>
-<span><span class="co">#&gt; wood_deck_sf          2.853e+01  7.567e+00   3.770 0.000170 ***</span></span>
-<span><span class="co">#&gt; bsmt_qual_gd         -1.253e+04  2.429e+03  -5.160 2.82e-07 ***</span></span>
-<span><span class="co">#&gt; central_air_n         6.577e+02  4.250e+03   0.155 0.877026    </span></span>
-<span><span class="co">#&gt; garage_finish_unf    -1.294e+03  2.622e+03  -0.493 0.621819    </span></span>
-<span><span class="co">#&gt; bedroom_abv_gr       -7.332e+03  1.656e+03  -4.427 1.03e-05 ***</span></span>
-<span><span class="co">#&gt; central_air_y                NA         NA      NA       NA    </span></span>
-<span><span class="co">#&gt; half_bath            -1.322e+03  2.566e+03  -0.515 0.606379    </span></span>
+<span><span class="co">#&gt; (Intercept)          -1.202e+06  1.551e+05  -7.751 1.73e-14 ***</span></span>
+<span><span class="co">#&gt; gr_liv_area           1.846e+01  1.901e+01   0.971 0.331743    </span></span>
+<span><span class="co">#&gt; overall_qual          1.682e+04  1.153e+03  14.592  &lt; 2e-16 ***</span></span>
+<span><span class="co">#&gt; total_bsmt_sf         1.056e+01  6.719e+00   1.572 0.116159    </span></span>
+<span><span class="co">#&gt; bsmt_fin_sf1          6.962e+00  5.818e+00   1.197 0.231626    </span></span>
+<span><span class="co">#&gt; x2nd_flr_sf           3.007e+01  1.922e+01   1.564 0.117972    </span></span>
+<span><span class="co">#&gt; x1st_flr_sf           2.529e+01  1.947e+01   1.299 0.194262    </span></span>
+<span><span class="co">#&gt; garage_cars           1.719e+04  2.905e+03   5.917 4.10e-09 ***</span></span>
+<span><span class="co">#&gt; garage_area          -2.292e+00  9.563e+00  -0.240 0.810609    </span></span>
+<span><span class="co">#&gt; year_built            4.050e+02  6.614e+01   6.123 1.18e-09 ***</span></span>
+<span><span class="co">#&gt; lot_area              4.318e-01  9.823e-02   4.395 1.19e-05 ***</span></span>
+<span><span class="co">#&gt; exter_qual_ta        -4.192e+04  5.165e+03  -8.116 1.03e-15 ***</span></span>
+<span><span class="co">#&gt; year_remod_add        2.002e+02  6.622e+01   3.023 0.002544 ** </span></span>
+<span><span class="co">#&gt; overall_cond          5.358e+03  1.018e+03   5.264 1.63e-07 ***</span></span>
+<span><span class="co">#&gt; tot_rms_abv_grd      -6.810e+02  1.037e+03  -0.657 0.511415    </span></span>
+<span><span class="co">#&gt; garage_yr_blt        -1.025e+01  3.264e+00  -3.140 0.001723 ** </span></span>
+<span><span class="co">#&gt; ms_zoning_rm         -3.608e+03  4.554e+03  -0.792 0.428427    </span></span>
+<span><span class="co">#&gt; ms_sub_class         -1.627e+02  2.484e+01  -6.551 7.94e-11 ***</span></span>
+<span><span class="co">#&gt; neighborhood_crawfor  2.505e+04  5.167e+03   4.847 1.39e-06 ***</span></span>
+<span><span class="co">#&gt; fireplace_qu_0       -5.575e+02  4.335e+03  -0.129 0.897692    </span></span>
+<span><span class="co">#&gt; garage_type_detchd    1.502e+03  4.162e+03   0.361 0.718320    </span></span>
+<span><span class="co">#&gt; full_bath             3.244e+03  2.728e+03   1.189 0.234573    </span></span>
+<span><span class="co">#&gt; kitchen_qual_gd      -7.413e+03  2.502e+03  -2.963 0.003100 ** </span></span>
+<span><span class="co">#&gt; garage_type_attchd   -1.188e+03  3.491e+03  -0.340 0.733766    </span></span>
+<span><span class="co">#&gt; bsmt_unf_sf          -2.830e+00  5.908e+00  -0.479 0.631963    </span></span>
+<span><span class="co">#&gt; mas_vnr_area          2.027e+01  5.854e+00   3.463 0.000550 ***</span></span>
+<span><span class="co">#&gt; open_porch_sf        -1.349e+00  1.476e+01  -0.091 0.927189    </span></span>
+<span><span class="co">#&gt; ms_zoning_rl          1.136e+03  4.041e+03   0.281 0.778738    </span></span>
+<span><span class="co">#&gt; half_bath            -1.003e+03  2.584e+03  -0.388 0.697897    </span></span>
+<span><span class="co">#&gt; wood_deck_sf          2.910e+01  7.625e+00   3.816 0.000142 ***</span></span>
+<span><span class="co">#&gt; garage_finish_unf    -2.190e+03  2.632e+03  -0.832 0.405543    </span></span>
+<span><span class="co">#&gt; fireplaces            5.210e+03  3.419e+03   1.524 0.127851    </span></span>
+<span><span class="co">#&gt; exter_qual_gd        -2.808e+04  5.092e+03  -5.515 4.13e-08 ***</span></span>
+<span><span class="co">#&gt; bsmt_full_bath        9.431e+03  2.407e+03   3.917 9.38e-05 ***</span></span>
+<span><span class="co">#&gt; bsmt_qual_gd         -1.212e+04  2.447e+03  -4.954 8.12e-07 ***</span></span>
+<span><span class="co">#&gt; central_air_n         1.597e+03  4.274e+03   0.374 0.708755    </span></span>
 <span><span class="co">#&gt; ---</span></span>
 <span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Residual standard error: 33170 on 1424 degrees of freedom</span></span>
-<span><span class="co">#&gt; Multiple R-squared:  0.8299, Adjusted R-squared:  0.8257 </span></span>
-<span><span class="co">#&gt; F-statistic: 198.5 on 35 and 1424 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">jtools</span><span class="fu">::</span><span class="fu"><a href="https://jtools.jacob-long.com/reference/plot_summs.html" class="external-link">plot_summs</a></span><span class="op">(</span><span class="va">lm_rfe</span>, <span class="va">lm_lasso</span>, <span class="va">lm_TangledFeatures</span>, coefs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">lm_TangledFeatures</span><span class="op">$</span><span class="va">coef</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">8</span><span class="op">)</span><span class="op">]</span>, </span>
-<span>            omit.coefs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bsmt_qual_ex"</span><span class="op">)</span>,</span>
-<span>            model.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Random Forest RFE"</span>, <span class="st">"Lasso"</span>, <span class="st">"TangledFeatures"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Residual standard error: 33390 on 1424 degrees of freedom</span></span>
+<span><span class="co">#&gt; Multiple R-squared:  0.8276, Adjusted R-squared:  0.8233 </span></span>
+<span><span class="co">#&gt; F-statistic: 195.2 on 35 and 1424 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
+<p>Although a little better than lasso, we still have many variables
+that are insignificant. Variables such as garage_area having a negative
+coefficient also do not make sense.</p>
+</div>
+<div class="section level2">
+<h2 id="comparisons">Comparisons<a class="anchor" aria-label="anchor" href="#comparisons"></a>
+</h2>
+<p>If we take a look at the coefficient behavior across three models for
+a few variables, we can see that it is largely the same with one major
+exception.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">jtools</span><span class="fu">::</span><span class="fu"><a href="https://jtools.jacob-long.com/reference/plot_summs.html" class="external-link">plot_summs</a></span><span class="op">(</span><span class="va">lm_TangledFeatures</span>, <span class="va">lm_rfe</span>, <span class="va">lm_lasso</span> , coefs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">lm_TangledFeatures</span><span class="op">$</span><span class="va">coef</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,<span class="fl">8</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>        omit.coefs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bsmt_qual_ex"</span><span class="op">)</span>,</span>
+<span>        model.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TangledFeatures"</span>, <span class="st">"Random Forest RFE"</span>, <span class="st">"Lasso"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">coefs argument overrides omit.coefs argument. Displaying coefficients</span></span></span>
 <span><span class="co"><span style="color: #00BBBB;">#&gt; listed in coefs argument.</span></span></span></code></pre></div>
 <p><img src="Example_Walkthrough_files/figure-html/Plotting%20and%20Comparing%20Coefficents-1.png" width="700"></p>
-<p>If we take a look at the coefficent behavior across three models for
-a few variables, we can see that it is largely the same with one major
-exception. Both Lasso and RandomForest make the garage_area variable
-negative, as it is highly correlated with other variables.
-TangledFeatures takes the variable interrelationships into account and
-generates the correct variable effect.</p>
+<p>We can see the coefficients as well as the confidence intervals for
+each linear model.</p>
+<p>Both Lasso and Random Forest make the garage_area variable negative,
+as it is highly correlated with other variables. TangledFeatures takes
+the variable interrelationships into account and generates the correct
+variable effect. The confidence interval for the model from
+TangledFeatures has a tighter confidence interval as well.</p>
+</div>
+<div class="section level2">
+<h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
+</h2>
+<p>We have seem the effects variables from TangledFeatures has on the
+outcome compared to a few other simple feature techniques. There are
+many ways to pick features for a linear/logistic model. As of right now,
+TangledFeatures is the best alternative to traditional dimensionality
+reduction techniques.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
