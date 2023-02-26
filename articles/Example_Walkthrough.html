@@ -369,23 +369,23 @@ behavior</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Residuals:</span></span>
 <span><span class="co">#&gt;     Min      1Q  Median      3Q     Max </span></span>
-<span><span class="co">#&gt; -508960  -16305    -904   14598  262338 </span></span>
+<span><span class="co">#&gt; -502844  -19586   -1996   15854  287269 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Coefficients:</span></span>
 <span><span class="co">#&gt;                 Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
-<span><span class="co">#&gt; (Intercept)   -6.882e+05  7.918e+04  -8.691  &lt; 2e-16 ***</span></span>
-<span><span class="co">#&gt; overall_qual   1.796e+04  1.120e+03  16.038  &lt; 2e-16 ***</span></span>
-<span><span class="co">#&gt; gr_liv_area    5.142e+01  2.443e+00  21.052  &lt; 2e-16 ***</span></span>
-<span><span class="co">#&gt; total_bsmt_sf  2.194e+01  2.774e+00   7.908 5.12e-15 ***</span></span>
-<span><span class="co">#&gt; year_built     3.224e+02  4.159e+01   7.753 1.68e-14 ***</span></span>
-<span><span class="co">#&gt; garage_area    3.955e+01  5.912e+00   6.690 3.18e-11 ***</span></span>
-<span><span class="co">#&gt; bsmt_qual_ex   4.986e+04  4.039e+03  12.344  &lt; 2e-16 ***</span></span>
+<span><span class="co">#&gt; (Intercept)   -7.542e+05  8.319e+04  -9.066  &lt; 2e-16 ***</span></span>
+<span><span class="co">#&gt; overall_qual   2.134e+04  1.153e+03  18.511  &lt; 2e-16 ***</span></span>
+<span><span class="co">#&gt; gr_liv_area    4.866e+01  2.729e+00  17.831  &lt; 2e-16 ***</span></span>
+<span><span class="co">#&gt; year_built     3.422e+02  4.367e+01   7.836 8.95e-15 ***</span></span>
+<span><span class="co">#&gt; total_bsmt_sf  1.889e+01  4.284e+00   4.409 1.12e-05 ***</span></span>
+<span><span class="co">#&gt; garage_area    4.380e+01  6.224e+00   7.038 3.00e-12 ***</span></span>
+<span><span class="co">#&gt; x1st_flr_sf    1.374e+01  4.978e+00   2.760  0.00585 ** </span></span>
 <span><span class="co">#&gt; ---</span></span>
 <span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Residual standard error: 36580 on 1453 degrees of freedom</span></span>
-<span><span class="co">#&gt; Multiple R-squared:  0.7889, Adjusted R-squared:  0.788 </span></span>
-<span><span class="co">#&gt; F-statistic: 904.8 on 6 and 1453 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
+<span><span class="co">#&gt; Residual standard error: 38350 on 1453 degrees of freedom</span></span>
+<span><span class="co">#&gt; Multiple R-squared:  0.7679, Adjusted R-squared:  0.767 </span></span>
+<span><span class="co">#&gt; F-statistic: 801.4 on 6 and 1453 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
 <p>The features selected all seem to indicate significance and more
 importantly agree with the findings from our correlation analysis.</p>
 </div>
@@ -658,11 +658,9 @@ coefficient also do not make sense.</p>
 a few variables, we can see that it is largely the same with one major
 exception.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">jtools</span><span class="fu">::</span><span class="fu"><a href="https://jtools.jacob-long.com/reference/plot_summs.html" class="external-link">plot_summs</a></span><span class="op">(</span><span class="va">lm_TangledFeatures</span>, <span class="va">lm_rfe</span>, <span class="va">lm_lasso</span> , coefs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">lm_TangledFeatures</span><span class="op">$</span><span class="va">coef</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,<span class="fl">8</span><span class="op">)</span><span class="op">]</span>,</span>
-<span>        omit.coefs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bsmt_qual_ex"</span><span class="op">)</span>,</span>
-<span>        model.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TangledFeatures"</span>, <span class="st">"Random Forest RFE"</span>, <span class="st">"Lasso"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">coefs argument overrides omit.coefs argument. Displaying coefficients</span></span></span>
-<span><span class="co"><span style="color: #00BBBB;">#&gt; listed in coefs argument.</span></span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">jtools</span><span class="fu">::</span><span class="fu"><a href="https://jtools.jacob-long.com/reference/plot_summs.html" class="external-link">plot_summs</a></span><span class="op">(</span><span class="va">lm_TangledFeatures</span>, <span class="va">lm_rfe</span>, <span class="va">lm_lasso</span> , coefs <span class="op">=</span> </span>
+<span>                   <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">lm_TangledFeatures</span><span class="op">$</span><span class="va">coef</span><span class="op">)</span><span class="op">[</span><span class="op">!</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">lm_TangledFeatures</span><span class="op">$</span><span class="va">coef</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">(</span><span class="st">"(Intercept)"</span><span class="op">)</span>,                        <span class="st">"overall_qual"</span>, <span class="st">"bsmt_qual_ex"</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>                   model.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TangledFeatures"</span>, <span class="st">"Random Forest RFE"</span>, <span class="st">"Lasso"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Example_Walkthrough_files/figure-html/Plotting%20and%20Comparing%20Coefficents-1.png" width="700"></p>
 <p>We can see the coefficients as well as the confidence intervals for
 each linear model.</p>
