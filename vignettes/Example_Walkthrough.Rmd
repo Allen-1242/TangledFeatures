@@ -201,7 +201,7 @@ jtools::plot_summs(lm_TangledFeatures, lm_rfe, lm_lasso , coefs = names(lm_Tangl
 
 We can see the coefficients as well as the confidence intervals for each linear model. 
 
-Both Lasso and Random Forest make the garage_area variable negative, as it is highly correlated with other variables. TangledFeatures takes the variable interrelationships into account and generates the correct variable effect. The confidence interval for the model from TangledFeatures has a tighter confidence interval as well. 
+Both Lasso and Random Forest make the garage_area variable negative, as it is highly correlated with other variables. TangledFeatures takes the variable interrelationships into account and generates the correct variable effect. The confidence interval for the model from TangledFeatures is tighter as well. 
 
 # Conclusion
 We have seem the effects variables from TangledFeatures has on the outcome compared to a few other simple feature techniques. There are many ways to pick features for a linear/logistic model. As of right now, TangledFeatures is the best alternative to traditional dimensionality reduction techniques. 

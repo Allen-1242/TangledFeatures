@@ -13,11 +13,19 @@ Features extracted are meant to be inputted into easily explainable models such 
 
 ## Installation
 
+The TangledFeatures Package is now available on CRAN
+
 You can install the development version of TangledFeatures like so:
 
+| Type        | Source     | Command                                                                       |
+|-------------|------------|-------------------------------------------------------------------------------|
+| Release     | CRAN       | `install.packages("TangledFeatures")`                                             |
+| Development | Github     | `install_github("TangledFeatures/TangledFeatures")` |
+
+Once you have downloaded the package, you can then load it using:
+
 ``` r
-package(TangledFeatures)
-install_github("TangledFeatures/TangledFeatures")
+library("TangledFeatures")
 ```
 
 ## Usage
