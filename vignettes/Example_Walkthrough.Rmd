@@ -194,9 +194,9 @@ Although a little better than lasso, we still have many variables that are insig
 If we take a look at the coefficient behavior across three models for a few variables, we can see that it is largely the same with one major exception.
 
 ```{r Plotting and Comparing Coefficents}
-jtools::plot_summs(lm_TangledFeatures, lm_rfe, lm_lasso , coefs = names(lm_TangledFeatures$coef)[-c(1:2,8)],
-        omit.coefs = c("bsmt_qual_ex"),
-        model.names = c("TangledFeatures", "Random Forest RFE", "Lasso"))
+jtools::plot_summs(lm_TangledFeatures, lm_rfe, lm_lasso , coefs = 
+                   names(lm_TangledFeatures$coef)[! names(lm_TangledFeatures$coef) %in% c(("(Intercept)"),                        "overall_qual", "bsmt_qual_ex")],
+                   model.names = c("TangledFeatures", "Random Forest RFE", "Lasso"))
 ```
 
 We can see the coefficients as well as the confidence intervals for each linear model. 
