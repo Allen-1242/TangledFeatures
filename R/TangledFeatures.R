@@ -4,7 +4,7 @@
 #' @name Housing_Prices_dataset
 #' @keywords datasets
 NULL
-print("Hello")
+
 #' Advertisement dataset
 #' @name Advertisement
 #' @keywords datasets
@@ -299,7 +299,7 @@ TangledFeatures <- function(Data, Y_var, Focus_variables = list(), corr_cutoff =
     {
       if(any(var_groups[[i]] %in% Focus_variables))
       {
-        if(sum(which(var_groups[[i]] %in% Focus_variables >= 2)))
+        if(length(intersect(var_groups[[i]], Focus_variables)) >= 2)
         {
           Intersection <- dplyr::intersect(Focus_variables, var_groups[[i]])
           var_groups[[i]] <- Intersection[1]
@@ -312,26 +312,47 @@ TangledFeatures <- function(Data, Y_var, Focus_variables = list(), corr_cutoff =
     }
 
     #Getting every combination of variables possible
-    if(fast_calculation == TRUE || prod(vapply(var_groups, length, length(var_groups))) > 100)
+    #if(fast_calculation == TRUE || prod(vapply(var_groups, length, length(var_groups))) > 100)
+    #{
+    #  result <- purrr::map(var_groups, 1)
+    #  result <- as.data.frame(t(unlist(result)))
+    #}else
+    #{
+    #  result <- expand.grid(var_groups)
+    #}
+    # Stratified sampling of variable combinations (each variable appears at least k times)
+    k <- 5  # adjust this to control coverage
+
+    combos <- list()
+    for (g in seq_along(var_groups))
     {
-      result <- purrr::map(var_groups, 1)
-      result <- as.data.frame(t(unlist(result)))
-    }else
-    {
-      result <- expand.grid(var_groups)
+      vars <- var_groups[[g]]
+      for (v in vars) {
+        forced <- replicate(k, {
+          choice <- sapply(var_groups, function(grp) sample(grp, 1))
+          choice[g] <- v  # force this variable into the combo
+          choice
+        }, simplify = FALSE)
+        combos <- append(combos, forced)
+      }
     }
+
+    result <- do.call(rbind, combos)
+    result <- as.data.frame(result, stringsAsFactors = FALSE)
+    rownames(result) <- NULL
 
     RF_list <- list()
 
-    noncor_columns <- colnames(Data)[! colnames(Data) %in% unlist(var_groups)]
+    noncor_columns <- colnames(Data)[! colnames(Data) %in% unlist(var_groups)] #This contains the Y_var variable as well
     Data_nocor <- Data[,noncor_columns, with = FALSE]
 
     ##Start of the RF, note we need to add multiprocessing here
     for(i in seq(nrow(result)))
     {
+      message("Running RF ", i, " of ", nrow(result))
       Data_temp <- cbind(Data_nocor, Data[, unlist(result[i,]), with = FALSE])
 
-      Rf <- ranger::ranger(as.formula(paste(paste(Y_var, '~'), paste(colnames(Data_temp), collapse = "+"))), data = Data_temp, mtry = ncol(Data_temp/3), importance = 'permutation')
+      Rf <- ranger::ranger(as.formula(paste(Y_var, '~ .')), data = Data_temp, mtry = max(1, floor(ncol(Data_temp)/3)), importance = 'permutation')
       Rf_2 <- data.frame(Rf$variable.importance)
       RF_list[[i]] <- Rf_2
     }
@@ -340,7 +361,7 @@ TangledFeatures <- function(Data, Y_var, Focus_variables = list(), corr_cutoff =
   {
     RF_list <- list()
 
-    Rf <- ranger(as.formula(paste(paste(Y_var, '~'), paste(colnames(Data[, -Y_var, with = FALSE]), collapse = "+"))), data = Data, mtry = ncol(Data[, -Y_var, with = FALSE]/3), importance = 'permutation')
+    Rf <- ranger(as.formula(paste(Y_var, '~ .')) , data = Data, mtry = max(1, floor(ncol(Data[, -Y_var, with = FALSE])/3)), importance = 'permutation')
     Rf_2 <- data.frame(Rf$variable.importance)
     RF_list[[1]] <- Rf_2
   }
@@ -380,7 +401,7 @@ TangledFeatures <- function(Data, Y_var, Focus_variables = list(), corr_cutoff =
     Rf_list <- list()
 
     #Here let us add RFE in order to run it
-    Rf <- ranger(as.formula(paste(paste(Y_var, '~'), paste(colnames(Data_temp), collapse = "+"))), data = Data_temp, mtry = ncol(Data_temp)/3, importance = 'permutation')
+    Rf <- ranger(as.formula(paste(Y_var, '~ .')), data = Data_temp, mtry = max(1, floor(ncol(Data_temp)/3)), importance = 'permutation')
     Rf_2 <- data.frame(Rf$variable.importance)
     Rf_2$Var <- rownames(Rf_2)
 
@@ -402,8 +423,7 @@ TangledFeatures <- function(Data, Y_var, Focus_variables = list(), corr_cutoff =
     x1 <- cumsum(Rf_2$Rf.variable.importance)
     temp <- which(x1 > RF_coverage)[1]
 
-    final_variables <- Rf_2[0:temp,]$Var
-
+    final_variables <- Rf_2[1:temp, "Var"]
 
     # if(#method is based on num_columns)
     # {
@@ -419,7 +439,7 @@ TangledFeatures <- function(Data, Y_var, Focus_variables = list(), corr_cutoff =
   }else
   {
     var_groups <- c()
-    Rf <- ranger(as.formula(paste(paste(Y_var, '~'), paste(colnames(Data[, -Y_var, with = FALSE]), collapse = "+"))), data = Data, mtry = ncol(Data[, -Y_var, with = FALSE]/3), importance = 'permutation')
+    Rf <- ranger(as.formula(paste(paste(Y_var, '~'), paste(colnames(Data[, -Y_var, with = FALSE]), collapse = "+"))), data = Data, mtry = max(1, floor(ncol(Data[, -Y_var, with = FALSE]/3))), importance = 'permutation')
     Rf_2 <- data.frame(Rf$variable.importance)
     Rf_2$Var <- rownames(Rf_2)
 
@@ -439,41 +459,35 @@ TangledFeatures <- function(Data, Y_var, Focus_variables = list(), corr_cutoff =
     x1 <- cumsum(Rf_2$Rf.variable.importance)
     temp <- which(x1 > RF_coverage)[1]
 
-    final_variables <- Rf_2[0:temp,]$Var
+    final_variables <- Rf_2[1:temp, "Var"]
 
   }
 
   ##Plotting function for correlation methods
-  if(plot == TRUE)
+  if (plot == TRUE)
   {
-    if(length(connects) != 0)
+    if (length(connects) != 0)
     {
-      #Heat map of the correlation
-      heatmap <- ggplot(data = pairs_mat, aes(var1, var2, fill = value))+
-        geom_tile(color = "blue")+
+      # Heatmap of correlations
+      heatmap <- ggplot(pairs_mat, aes(var1, var2, fill = value)) +
+        geom_tile(color = NA) +
         scale_fill_gradient2(low = "purple", high = "red", mid = "white",
-                             midpoint = 0, limit = c(-1,1), space = "Lab",
-                             name="Correlation") +
-        theme_minimal()+
+                             midpoint = 0, limit = c(-1, 1),
+                             space = "Lab", name = "Correlation") +
+        theme_minimal() +
         theme(axis.text.x = element_text(angle = 45, vjust = 1,
-                                         size = 12, hjust = 1))+
+                                         size = 12, hjust = 1)) +
         coord_fixed()
 
-
-      #Graph object of the correlation
-      igraph_plot <- graph_from_adjacency_matrix(as(connects, "lMatrix"))
-    }else
+      # Graph object of correlation groups
+      igraph_plot <- igraph::graph_from_adjacency_matrix(as.matrix(connects))
+    } else
     {
-      heatmap <- c()
-      igraph_plot <- c()
+      heatmap <- NULL
+      igraph_plot <- NULL
     }
-
-
-  }else
-  {
-    heatmap <- c()
-    igraph_plot <- c()
   }
+
 
   Results <- list('Final_Variables' = final_variables, 'Variable_groups' = var_groups,
                   'Correlation_heatmap' = heatmap,'Graph_plot' = igraph_plot)
