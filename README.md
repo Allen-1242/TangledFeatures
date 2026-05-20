@@ -1,4 +1,3 @@
-
 # TangledFeatures  <img src="man/figures/logo.png" align="right" height="139" />
  
 <!-- badges: start -->
@@ -6,6 +5,8 @@
 <!-- badges: end -->
 
 Note: This website will be updated in the coming days. Please drop me an email at allensunny1242@gmail.com if there are any issues.
+
+A version was presented at NeurIPS 2025 : [<br>](https://arxiv.org/pdf/2510.15005v1)
 
 TangledFeatures is a feature selection method that extracts needed variables in highly interrelated spaces. It does not alter the nature of the variables and is hence an alternative to traditional dimensionality reduction techniques. 
 
